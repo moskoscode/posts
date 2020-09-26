@@ -1,12 +1,26 @@
 
+<!---
+
 # A ser abordado
- - O que é e por que usar o git
- - Como instalar
- - Criando um repositorio
- - Editando arquivos
- - Ramificando
- - Mesclando alterações
- - Clonar, Pull & Push
+ - [X] O que é e por que usar o git
+ - [X] Como instalar
+ - [ ] Criando um repositorio
+ - [ ] Editando arquivos
+ - [ ] Ramificando
+ - [ ] Mesclando alterações
+ - [ ] Clonar, Pull & Push
+
+# Ideias de Tĩtulo
+### Tĩtulo
+ - Git para iniciantes
+ - Introdução ao Git
+ - Mas o que carvalhos é Git?
+
+### Subtĩtulo
+ - Uma breve introdução à gerenciamento de versão
+ - Imagine viajar no tempo - com Git isso é *quase* possível
+
+-->
 
 # O que é e por que usar o git
 
@@ -75,5 +89,4 @@ git version 2.20.1
 Como você pode ver, minha versão é um tanto desatualizada (a mais atual no
 momento é a 2.28.0), mas não tem problema por que nesse tutorial só vamos ver coisas básicas
 e, além disso, o git é, geralmente, bastante retrocompatível.
-
 
