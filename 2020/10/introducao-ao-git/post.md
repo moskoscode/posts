@@ -12,7 +12,7 @@
 
 Muitas áreas de trabalho tem um ciclo de produção que gira em torno de novos
 produtos. Por exemplo o desenvolvimento de celulares segue basicamente `Projeto
--> Producao -> Venda`, aí quando um aparelho é lançado, recomeçam com um novo
+-> Produção -> Venda`, aí quando um aparelho é lançado, recomeçam com um novo
 projeto. Mas em software a história é bem diferente: Um programa bem suscedido
 muito raramente é reescrito, ele normalmente é alterado de pouco em pouco,
 possívelmente para todo o sempre. Olhe o Linux como exemplo: é o mesmo software
@@ -38,4 +38,42 @@ várias versões de um arquivo - desde que as alterações não tenham acontecid
 mesma linha (nesse caso o git pede sua ajuda pra resolver o conflito).
 
 Tudo isso parece ótimo, então como usar? Primeiro precisamos instalar o git.
+
+# Como instalar
+
+No o linux/BSD instalar o git é muito fácil, normalmente basta um
+
+```yaml
+$ sudo {gerenciador de pacotes} {instalar} git
+```
+
+no ubuntu isso se traduziria para `sudo apt install git` (mais possíveis
+comandos [aqui](https://git-scm.com/download/linux)).
+
+Já se você não têm a sorte de usar um sistema operacional livre, você pode
+baixar instaladores para [MacOS](https://git-scm.com/download/mac) ou
+[Windows](https://gitforwindows.org/)
+
+Um aviso: **NÃO ENTRE EM PÂNICO**. Tudo que vamos fazer aqui vai ser na linha
+de commando, mas eu te garanto que vai ser bem simples e tranquilo.
+
+Para testar a instalação, abra o terminal (Git BASH, no Windows) e digite
+
+```yaml
+$ git --version
+```
+
+Se aparecer qualquer coisa diferente do que sua versão, provavelmente aconteceu
+algo de errado na instalação e você deve dar uma olhada nisso antes de
+continuar. No meu caso o resultado é o seguinte:
+
+```yaml
+$ git --version
+git version 2.20.1
+```
+
+Como você pode ver, minha versão é um tanto desatualizada (a mais atual no
+momento é a 2.28.0), mas não tem problema por que nesse tutorial só vamos ver coisas básicas
+e, além disso, o git é, geralmente, bastante retrocompatível.
+
 
