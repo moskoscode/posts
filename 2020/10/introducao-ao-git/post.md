@@ -6,7 +6,7 @@
  - [X] Como instalar
  - [X] Criando um repositório
  - [X] Commitando arquivos
- - [ ] Editando arquivos
+ - [X] Editando arquivos
  - [ ] Ramificando
  - [ ] Mesclando alterações
  - [ ] Clonar, Pull & Push
@@ -272,4 +272,184 @@ nothing to commit, working tree clean
 Então isso aí, já estamos rastreando alterações nas nossas receitas e no futuro
 poderemos ver como elas evoluíram ao longo do tempo, ou voltar a uma versão
 anterior se fizermos caca.
+
+# Editando arquivos
+
+Eu acabei de fazer aqui o purê de batata monstro e pra ser bem sincero, acho
+que está meio sem sal do jeito que fizemos a receita. O que acha de colocarmos
+um pouco de tempero pra ver como fica?
+
+```markdown
+# Ingredientes
+ - 1 Xícara de Batata Doce
+ - 200 mg de Água
+ - 5 moléculas de Nitrato de Cálcio
+ - 1 pitada de sal do Himalaia
+ - 2 Pedras de granito médias
+
+# Modo de preparo
+Coloque a Batata Doce em uma tigela e amasse até ficar bem pastosa, aí adicione
+a água e misture. Pré-acelere seu acelerador de partículas à 1/50 da velocidade
+da luz. Enquanto isso triture o granito e o coloque no purê, seguido do sal.
+Leve o conteúdo da tigela ao acelerador de partículas seguido do Nitrato de
+Cálcio e deixe por 10 minutos à 1/10 da velocidade da luz.
+
+Rende 3 porções
+```
+
+Agora sim, bem mais saboroso. Vamos dar uma olhada no git para ver se estamos
+prontos para salvar essa nova versão.
+
+```yaml
+$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+        modified:   pure-de-batata-monstro.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+Isso aí, o pure de batata está marcado como modificado. Podemos confirmar que
+só mudamos o que realmente queremos commitar com o comando `git diff` que vai
+nos mostrar todas as alterações que fizemos. Dependendo da quantidade de
+alterações feitas, pode ser que elas não caibam no seu terminal, se esse for o
+caso o git vai colocar elas em um *pager* que você pode navegar com as setinhas
+do teclado e apertar ***q*** para fechar.
+
+```yaml
+$ git diff
+diff --git a/pure-de-batata-monstro.md b/pure-de-batata-monstro.md
+index 7a6c5fd..1445d91 100644
+--- a/pure-de-batata-monstro.md
++++ b/pure-de-batata-monstro.md
+@@ -2,10 +2,14 @@
+  - 1 Xícara de Batata Doce
+  - 200 mg de Água
+  - 5 moléculas de Nitrato de Cálcio
++ - 1 pitada de sal do Himalaia
++ - 2 Pedras de granito médias
+
+ # Modo de preparo
+ Coloque a Batata Doce em uma tigela e amasse até ficar bem pastosa, aí adicione
+-a água e misture. Coloque em um acelerador de partículas seguido do Nitrato de
+-Cálcio e ligue por 10 minutos à 1/10 da velocidade da luz.
++a água e misture. Pré-acelere seu acelerador de partículas à 1/50 da velocidade
++da luz. Enquanto isso triture o granito e o coloque no purê, seguido do sal.
++Leve o conteúdo da tigela ao acelerador de partículas seguido do Nitrato de
++Cálcio e deixe por 10 minutos à 1/10 da velocidade da luz.
+
+ Rende 3 porções
+```
+
+Provavelmente no seu terminal essas alterações vão ter cores mais bonitinhas,
+mas no caso temos que ir pelos símbolos: as linhas que começam com `-` foram
+removidas e as com `+` foram adicionadas. E realmente é isso ai que queremos
+commitar, é possível adicionar apenas partes de uma alteração em um commit, mas
+fazer isso pelo terminal é um pouco trabalhoso então normalmente eu faço por
+uma extensão no meu editor de texto (vim, no caso). Eis algumas recomendações
+pra vocês:
+
+<!-- spell-checker: disable -->
+Vim: [vim-fugitive](https://github.com/tpope/vim-fugitive) e [vim-gitgutter](https://github.com/airblade/vim-gitgutter)
+Emacs: [magit](https://magit.vc/)
+VsCode: [Git History](https://marketplace.visualstudio.com/items?itemName=donjayamanne.githistory)
+Atom: [Github package](https://github.atom.io/)
+Sublime: [GitGutter](https://github.com/jisaacks/GitGutter)
+<!-- spell-checker: enable -->
+
+Eu nunca usei alguns desses (mas parecem legais), então considere essas
+recomendações apenas como um guia para você achar o que funciona melhor pra
+você.
+
+Mas voltando às receitas, vamos adicionar o arquivo todo e fazer um novo
+commit.
+
+```yaml
+$ git add pure-de-batata-monstro.md
+$ git commit -m "Adicionados temperos ào purê de batata monstro"
+[master 086d717] Adicionados temperos ào purê de batata monstro
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+```
+
+> Tá legal, fizemos alguns commits até agora, como eu faço pra ver eles?
+
+Podemos ver todo nosso histórico de mudanças com o comando `git log` (esse
+quase sempre usa um pager)
+
+<!-- spell-checker: disable -->
+```yaml
+$ git log
+commit 086d71707d9cb0a55e1e1c2ef4d1fedcf51834a6 (HEAD -> master)
+Author: Eduardo Mosko <eduardo@moskoscode.com>
+Date:   Sun Sep 27 12:42:54 2020 -0300
+
+    Adicionados temperos ào purê de batata monstro
+
+commit 4408c82c1d049be3488f611918b7b3657c1d5bf9
+Author: Eduardo Mosko <eduardo@moskoscode.com>
+Date:   Sun Sep 27 11:56:15 2020 -0300
+
+    Criada receita de bolo minimalista
+
+commit 4400893abbe5d3ba8db324d07730788aaed3a0a1
+Author: Eduardo Mosko <eduardo@moskoscode.com>
+Date:   Sat Sep 26 21:56:23 2020 -0300
+
+    Criada receita de Pure de Batata Monstro
+```
+<!-- spell-checker: enable -->
+
+Cada um desses números longos é a **"hash"** do commit, ela serve para
+identificar unicamente cada um deles e é gerada com base no conteúdo commitado.
+Como você pode ver, esse comando também mostra a data e o autor de cada commit,
+podemos ver informações diferentes passando algumas opções para o comando. Por
+exemplo, para ver a quantidade de linhas alteradas em cada commit podemos usar
+`--stat`.
+
+
+<!-- spell-checker: disable -->
+```yaml
+$ git log --stat
+commit d824228624e2378bd25ce31aba6b5e0533b4f01c (HEAD -> master)
+Author: Eduardo Mosko <eduardo@moskoscode.com>
+Date:   Sun Sep 27 12:42:54 2020 -0300
+
+    Adicionados temperos ào purê de batata monstro
+
+ pure-de-batata-monstro.md | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+commit 7080b423c2bd3fb8c272ff78a2f7f5a8482cc27a
+Author: Eduardo Mosko <eduardo@moskoscode.com>
+Date:   Sun Sep 27 11:56:15 2020 -0300
+
+    Criada receita de bolo minimalista
+
+ bolo-minimalista.md | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+commit 5245cc6dd713bdc0bb33645061fe2a9e9f480f73
+Author: Eduardo Mosko <eduardo@moskoscode.com>
+Date:   Sat Sep 26 21:56:23 2020 -0300
+
+    Criada receita de Pure de Batata Monstro
+
+ pure-de-batata-monstro.md | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+```
+<!-- spell-checker: enable -->
+
+Se quiser ver a infinitude de opções de formatação que o git tem, você pode
+usar o comando `git log --help`.
+
+Algumas das muitas outras coisas que podemos fazer é ver as alterações que
+houveram desde um commit com `git diff {aquele número grande}`, voltar para um
+commit com `git checkout {número}` (você pode voltar para o mais recente com
+`git checkout master`) ou ver apenas commits que modificaram um determinado
+arquivo `git log {nome do arquivo}`, além de **muitos** outros que você pode
+ver com `git --help` e `git --help -a`.
+
 
