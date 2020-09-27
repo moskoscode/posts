@@ -5,7 +5,7 @@
  - [X] O que é e por que usar o git
  - [X] Como instalar
  - [X] Criando um repositório
- - [ ] Commitando arquivos
+ - [X] Commitando arquivos
  - [ ] Editando arquivos
  - [ ] Ramificando
  - [ ] Mesclando alterações
@@ -20,6 +20,7 @@
 ### Subtĩtulo
  - Uma breve introdução à gerenciamento de versão
  - Imagine viajar no tempo - com Git isso é *quase* possível
+ - Gerencie seus projetos, poemas e receitas
 
 -->
 
@@ -206,5 +207,56 @@ $ git commit -m "Criada receita de Pure de Batata Monstro"
 ```
 
 Nesse relatório podemos ver que o `pure-de-batata-monstro.md` foi criado e que
-ele teve 11 linhas inseridas.
+ele teve 11 linhas inseridas. Vamos ver como o repositório está agora.
+
+```yaml
+$ git status
+On branch master
+nothing to commit, working tree clean
+```
+
+Estamos no ramo mestre, sem nada para commitar. Esse vai ser, provavelmente, o
+estado que você mais vai ver seu repositório, principalmente logo depois de
+terminar de fazer alterações e commitar tudo. Vamos criar mais uma receita só
+pra fixar o esquema. No caso essa vai ser `bolo-minimalista.md`
+
+```markdown
+# Ingredientes
+ - 4 Colheres de trigo
+ - 3 Colheres de açúcar
+ - 1 Colher de nescau
+
+# Modo de preparo
+Misture tudo em um pote e coma.
+
+Rende 1 pote.
+```
+
+```yaml
+$ git status
+On branch master
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        bolo-minimalista.md
+
+nothing added to commit but untracked files present (use "git add" to track)
+```
+
+Podemos ver que o git já o identifica como arquivo novo, vamos adicionar e commitar.
+
+```yaml
+$ git add bolo-minimalista.md
+$ git commit -m "Criada receita de bolo minimalista"
+[master 4408c82] Criada receita de bolo minimalista
+ 1 file changed, 9 insertions(+)
+ create mode 100644 bolo-minimalista.md
+$ git status
+On branch master
+nothing to commit, working tree clean
+```
+
+Então isso aí, já estamos rastreando alterações nas nossas receitas e no futuro
+poderemos ver como elas evoluíram ao longo do tempo, ou voltar a uma versão
+anterior se fizermos caca.
 
