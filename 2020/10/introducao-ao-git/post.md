@@ -4,7 +4,8 @@
 # A ser abordado
  - [X] O que é e por que usar o git
  - [X] Como instalar
- - [ ] Criando um repositório
+ - [X] Criando um repositório
+ - [ ] Commitando arquivos
  - [ ] Editando arquivos
  - [ ] Ramificando
  - [ ] Mesclando alterações
@@ -107,6 +108,28 @@ Initialized empty Git repository in /home/eduardo/moskoscode/posts/2020/10/intro
 
 E simples assim, temos um repositório.
 
-Vamos ver alguns comandos do git então.
+Vamos ver alguns comandos do git então. Para obtermos informações sobre o
+estado atual do nosso repo, podemos usar o `git status`
+
+<!-- spell-checker: disable -->
+```yaml
+$ git status
+On branch master
+
+No commits yet
+
+nothing to commit (create/copy files and use "git add" to track)
+```
+<!-- spell-checker: enable -->
+
+No caso o git está nos dizendo que estamos no ramo "master" (vamos ver isso
+depois) e que não temos *commits* ainda.
+
+Um commit é basicamente um "salvar", mas um pouco diferente, é mais tipo "se
+comprometer". Isso por que quando você faz um *commit*, você está *se
+compromissando* com o estado dos arquivos no repositório, que a partir dali vão
+ser salvos como um momento ao qual você vai poder voltar.
+
+Vamos ver na prática para entender melhor.
 
 
