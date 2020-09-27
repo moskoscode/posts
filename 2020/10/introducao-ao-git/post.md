@@ -935,3 +935,22 @@ $ git log --all --decorate --oneline --graph
 
 Com tudo convergindo elegantemente para o master.
 
+# Concluindo
+
+Espero que você tenha gostado desse tutorial e tenha visto como o git pode ser
+útil para gerenciar quase qualquer trabalho que envolva arquivos de texto -
+desde monografias, poesias, receitas, tabelas do excel (em csv), arte vetorial
+(svg é um formato de texto), várias outras coisas e até, claro, programas de
+computador. Se quiser aprender mais super recomendo o livro [Pro
+Git](https://git-scm.com/book/pt-br/v2) que está disponível gratuitamente em
+formato digital e a super completa [documentação do
+github](https://docs.github.com/pt/free-pro-team@latest/github/using-git/getting-started-with-git-and-github).
+
+Ambos são super completos e cobrem também (em quantidades variadas) o
+[github](https://github.com), que é uma plataforma online para você armazenar seus
+repositórios, tanto de forma pública como privada.
+
+Inclusive os posts aqui do blog são gerenciados com git e armazenados no [nosso
+github](https://github.com/moskoscode), se quiser contribuir ou só dar uma
+olhada, dê uma passadinha por lá.
+
