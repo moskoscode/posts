@@ -132,4 +132,79 @@ ser salvos como um momento ao qual você vai poder voltar.
 
 Vamos ver na prática para entender melhor.
 
+# Commitando Arquivos
+
+Vamos criar um arquivo simples pra começar, uma receita (pra variar).
+
+```markdown
+# Ingredientes
+ - 1 Xícara de Batata Doce
+ - 200 mg de Água
+ - 5 moléculas de Nitrato de Cálcio
+
+# Modo de preparo
+Coloque a Batata Doce em uma tigela e amasse até ficar bem pastosa, aí adicione
+a água e misture. Coloque em um acelerador de partículas seguido do Nitrato de
+Cálcio e ligue por 10 minutos à 1/10 da velocidade da luz.
+
+Rende 3 porções
+```
+
+<!-- spell-checker: disable-next-line -->
+Podemos dar ao arquivo o nome de `pure-de-batata-monstro.md` e salvar.
+
+Agora, se dermos git status de novo
+
+<!-- spell-checker: disable -->
+```yaml
+$ git status
+On branch master
+
+No commits yet
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        pure-de-batata-monstro.md
+
+nothing added to commit but untracked files present (use "git add" to track)
+```
+<!-- spell-checker: enable -->
+
+Podemos ver que nosso arquivo apareceu, ele está na sessão dos arquivos
+**untracked** que são arquivos que o git não administra por que não há nenhum
+commit que os inclua. Podemos mudar isso usando o `git add` para adicionar esse
+arquivo para nossa *staging area* (área de preparação) na qual preparamos o
+commit que vamos fazer.
+
+```yaml
+$ git add pure-de-batata-monstro.md
+```
+
+```yaml
+$ git status
+On branch master
+
+No commits yet
+
+Changes to be committed:
+  (use "git rm --cached <file>..." to unstage)
+
+        new file:   pure-de-batata-monstro.md
+
+```
+
+Agora podemos ver que o arquivo foi para um lugar diferente, para "Changes to
+be commited" (mudanças a serem commitadas) e está marcado como um arquivo novo
+(new file). Então, como tudo parece certo, podemos commitar nossa receita.
+
+```yaml
+$ git commit -m "Criada receita de Pure de Batata Monstro"
+[master (root-commit) 4400893] Criada receita de Pure de Batata Monstro
+ 1 file changed, 11 insertions(+)
+ create mode 100644 pure-de-batata-monstro.md
+```
+
+Nesse relatório podemos ver que o `pure-de-batata-monstro.md` foi criado e que
+ele teve 11 linhas inseridas.
 
