@@ -8,7 +8,7 @@
  - [X] Commitando arquivos
  - [X] Editando arquivos
  - [X] Ramificando
- - [ ] Mesclando alterações
+ - [X] Mesclando alterações
 
 # Ideias de Tĩtulo
 ### Título
@@ -665,4 +665,273 @@ formas diferentes em ramos separados.
 
 Essa é uma das coisas que torna o Git tão bom, ele é colaborativo por padrão,
 não é à toa que é usado em quase todo projeto de software do mundo.
+
+# Mesclando alterações
+
+Ambas nossas receitas ficaram muito boas - sério. Imagina como ia ficar se
+misturássemos as duas, provavelmente o triplo de bom né? Vamos fazer isso
+mesclando nossos ramos em um terceiro: `bolo-sem-farinha-com-oleo`. Começamos
+criando esse ramo a partir de um dos dois que criamos, como já estamos no
+`bolo-com-oleo` vamos a partir desse mesmo.
+
+<!-- spell-checker: disable -->
+```yaml
+$ git status
+On branch bolo-com-oleo
+nothing to commit, working tree clean
+$ git checkout -b bolo-sem-farinha-com-oleo
+Switched to a new branch 'bolo-sem-farinha-com-oleo'
+$ git log --all --decorate --oneline --graph
+* c94bd69 (HEAD -> bolo-sem-farinha-com-oleo, bolo-com-oleo) Adicionado óleo ao bolo
+| * bf1e2b9 (bolo-sem-farinha) Tirada a farinha do bolo
+|/
+* d824228 (master) Adicionados temperos ào purê de batata monstro
+* 7080b42 Criada receita de bolo minimalista
+* 5245cc6 Criada receita de Pure de Batata Monstro
+```
+<!-- spell-checker: enable -->
+
+Agora o que precisamos fazer é usar o comando `git merge` para pegar outro ramo
+e mesclar com o nosso. No caso o ramo `bolo-sem-farinha`. Mas antes de usar
+temos que ver outra coisa: esse comando vai abrir o seu editor de texto
+configurado para editar a mensagem, então eu recomendo altamente que você
+configure isso certo, por que caso contrário o git provavelmente vai abrir o
+*nano* ou o *vim* e ambos podem ser um pouco assustadores para um iniciante.
+Você pode ver como configurar
+[aqui](https://docs.github.com/pt/free-pro-team@latest/github/using-git/associating-text-editors-with-git),
+ou pode continuar se estiver preparado para usar *um* comando no editor de
+texto que abrir.
+
+```yaml
+$ git merge bolo-sem-farinha
+```
+
+Ok, seu editor deve ter aberto agora, você pode colocar a mensagem que quiser,
+tipo "Misturando receitas :O", mas se for fazer isso, é boa pratica colocar uma
+mensagem descritiva do por que você está mesclando os ramos. Aí basta salvar e
+pode fechar. Se você tiver decidido enfrentar o `nano` ou o `vim`, você
+primeiro precisa identificar em qual você foi parar, é bem simples: o nano tem
+escrito `GNU nano` em cima e um monte de coisa estranha em baixo, já o vim só
+tem o texto da mesclagem. Pra sair do nano você tem que apertar `Ctrl+O` (que
+salva), `Enter` (confirma o nome do arquivo) e `Ctrl+X` (saí), já no vim você
+tem que digitar `:wq` e apertar enter. Se tudo estiver dado certo, devemos
+todos estar de volta à segurança agora.
+
+Reza a lenda que existem pessoas que estão no vim até hoje, algumas por que não
+conseguiram aprender a usar, já outras por que conseguiram.
+
+<!-- Explicando a piada: As que conseguiram continuam usando por que é bom
+demais, não sei se ficou claro -->
+
+Podemos então dar uma olhada em como nossa história ficou.
+
+<!-- spell-checker: disable -->
+```yaml
+$ git log --all --decorate --oneline --graph
+*   3ed3f8d (HEAD -> bolo-sem-farinha-com-oleo) Merge branch 'bolo-sem-farinha' into bolo-sem-farinha-com-oleo
+|\
+| * bf1e2b9 (bolo-sem-farinha) Tirada a farinha do bolo
+* | c94bd69 (bolo-com-oleo) Adicionado óleo ao bolo
+|/
+* d824228 (master) Adicionados temperos ào purê de batata monstro
+* 7080b42 Criada receita de bolo minimalista
+* 5245cc6 Criada receita de Pure de Batata Monstro
+```
+<!-- spell-checker: enable -->
+
+Muito legal né? Vamos ver se o git conseguiu juntar os arquivos com sucesso.
+
+```markdown
+# Ingredientes
+ - 3 Colheres de açúcar
+ - 1 Colher de nescau
+ - 1 Colher de óleo de amêndoas
+
+# Modo de preparo
+Misture tudo em um pote e leve ao micro-ondas por 1 minuto.
+
+Rende 1 pote.
+```
+
+Isso aí: sem farinha, mas com óleo. O git conseguiu mesclar tão bem
+principalmente por que não houveram mudanças na mesma linha, se tivessem ele
+teria dificuldade e provavelmente pediria para você ver como o arquivo deve
+ficar. Isso é chamado de um *conflito na mesclagem*. Vamos ver como resolver
+um.
+
+Primeiro temos que voltar no `master` e alterar alguma coisa que cause um
+conflito, como o modo de preparo.
+
+```markdown
+# Ingredientes
+ - 4 Colheres de trigo
+ - 3 Colheres de açúcar
+ - 1 Colher de nescau
+
+# Modo de preparo
+Bata tudo no liquidificador e sirva.
+
+Rende 1 pote.
+```
+
+Podemos commitar isso, e como configuramos nosso editor de texto, podemos
+omitir o `-m` e escrever nossa mensagem (potencialmente com múltiplas linhas)
+por lá.
+
+<!-- spell-checker: disable -->
+```yaml
+$ git commit
+[master a6ca7af] Usando o liquidificador ao invés do pote
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+$ git log --all --decorate --oneline --graph
+* a6ca7af (HEAD -> master) Usando o liquidificador ao invés do pote
+| *   3ed3f8d (bolo-sem-farinha-com-oleo) Merge branch 'bolo-sem-farinha' into bolo-sem-farinha-com-oleo
+| |\
+| | * bf1e2b9 (bolo-sem-farinha) Tirada a farinha do bolo
+| |/
+|/|
+| * c94bd69 (bolo-com-oleo) Adicionado óleo ao bolo
+|/
+* d824228 Adicionados temperos ào purê de batata monstro
+* 7080b42 Criada receita de bolo minimalista
+* 5245cc6 Criada receita de Pure de Batata Monstro
+```
+<!-- spell-checker: enable -->
+
+Podemos ver que nossa história está ficando um tanto complicada, mas sem
+problemas, o git lida bem com isso.
+
+Agora vamos mesclar tudo no master para ver como é o conflito.
+
+```yaml
+$ git merge bolo-sem-farinha-com-oleo
+Auto-merging bolo-minimalista.md
+CONFLICT (content): Merge conflict in bolo-minimalista.md
+Automatic merge failed; fix conflicts and then commit the result.
+```
+
+Isso, conflito no `bolo-minimalista.md`. Às vezes dá conflito em mais do que um
+arquivo, então podemos ver todos que temos que arrumar com o `git status`.
+
+```yaml
+$ git status
+On branch master
+You have unmerged paths.
+  (fix conflicts and run "git commit")
+  (use "git merge --abort" to abort the merge)
+
+Unmerged paths:
+  (use "git add <file>..." to mark resolution)
+
+        both modified:   bolo-minimalista.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+Tudo que está em "Unmerged paths" (caminhos não mesclados) teve algum erro que
+temos que arrumar. Vamos abrir o arquivo para ver do que se trata.
+
+```markdown
+# Ingredientes
+ - 3 Colheres de açúcar
+ - 1 Colher de nescau
+ - 1 Colher de óleo de amêndoas
+
+# Modo de preparo
+<<<<<<< HEAD
+Bata tudo no liquidificador e sirva.
+=======
+Misture tudo em um pote e leve ao micro-ondas por 1 minuto.
+>>>>>>> bolo-sem-farinha-com-oleo
+
+Rende 1 pote.
+```
+
+Essa parte
+
+```
+<<<<<<< HEAD
+[ ... ]
+=======
+[ ... ]
+>>>>>>> bolo-sem-farinha-com-oleo
+```
+
+Que delimita o conflito, podem haver vários desses em um arquivo e todos devem
+ser arrumados antes de mesclar. O que rola neles é tipo
+
+```
+<<<<<<< HEAD
+    Coisas que estavam na HEAD
+=======
+    Coisas que estavam na ramo que você quer mesclar
+>>>>>>> bolo-sem-farinha-com-oleo
+```
+
+Aí você pode substituir tudo isso por o que deve ficar alí, marcar o arquivo
+como resolvido com `git add` e commitar. No caso mesclei assim:
+
+```markdown
+# Ingredientes
+ - 3 Colheres de açúcar
+ - 1 Colher de nescau
+ - 1 Colher de óleo de amêndoas
+
+# Modo de preparo
+Bata tudo no liquidificador, leve ao micro-ondas por 1 minuto e sirva.
+
+Rende 1 pote.
+```
+
+```yaml
+$ git add bolo-minimalista.md
+$ git status
+On branch master
+All conflicts fixed but you are still merging.
+  (use "git commit" to conclude merge)
+
+Changes to be committed:
+
+        modified:   bolo-minimalista.md
+
+$ git commit
+[master 740c159] Merge branch 'bolo-sem-farinha-com-oleo'
+```
+
+E belezinha, tudo resolvido. Podemos agora deletar todos os ramos que
+terminamos de usar com `git branch -d`
+
+```yaml
+$ git branch
+  bolo-com-oleo
+  bolo-sem-farinha
+  bolo-sem-farinha-com-oleo
+* master
+$ git branch -d bolo-com-oleo bolo-sem-farinha bolo-com-farinha-sem-oleo
+Deleted branch bolo-com-oleo (was c94bd69).
+Deleted branch bolo-sem-farinha (was bf1e2b9).
+Deleted branch bolo-sem-farinha-com-oleo (was 3ed3f8d).
+```
+
+E nossa história ficou assim:
+
+<!-- spell-checker: disable -->
+```yaml
+$ git log --all --decorate --oneline --graph
+*   740c159 (HEAD -> master) Merge branch 'bolo-sem-farinha-com-oleo'
+|\
+| *   3ed3f8d Merge branch 'bolo-sem-farinha' into bolo-sem-farinha-com-oleo
+| |\
+| | * bf1e2b9 Tirada a farinha do bolo
+| * | c94bd69 Adicionado óleo ao bolo
+| |/
+* | a6ca7af Usando o liquidificador ao invés do pote
+|/
+* d824228 Adicionados temperos ào purê de batata monstro
+* 7080b42 Criada receita de bolo minimalista
+* 5245cc6 Criada receita de Pure de Batata Monstro
+```
+<!-- spell-checker: enable -->
+
+Com tudo convergindo elegantemente para o master.
 
