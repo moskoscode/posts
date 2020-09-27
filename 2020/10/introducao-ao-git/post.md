@@ -7,7 +7,7 @@
  - [X] Criando um repositório
  - [X] Commitando arquivos
  - [X] Editando arquivos
- - [ ] Ramificando
+ - [X] Ramificando
  - [ ] Mesclando alterações
  - [ ] Clonar, Pull & Push
 
@@ -452,4 +452,214 @@ commit com `git checkout {número}` (você pode voltar para o mais recente com
 arquivo `git log {nome do arquivo}`, além de **muitos** outros que você pode
 ver com `git --help` e `git --help -a`.
 
+
+# Universos paralelos - ou quase
+
+Digamos agora que eu tive duas ideias ao mesmo tempo de como melhorar a receita
+do bolo minimalista. Uma delas é tirando a farinha e a outra é adicionando
+óleo. Será que tem como registrar as duas para depois decidir qual eu acho
+melhor?
+
+A resposta é sim: criando ramos. Um jeito de pensar neles é como universos
+paralelos, como se em um deles eu tivesse tirado a farinha e no outro
+adicionado óleo de uma forma que não se interferem. Outro jeito é como ramos de
+uma árvore, mas acho mais estranho por que uma árvore não tem nada escrito.
+Enfim, vamos usar eles e daí você pode escolher sua analogia.
+
+Podemos acompanhar o que estamos fazendo usando algumas opções do `git log` que
+vão mostrar um gráfico bonitinho dos nossos ramos. O comando é esse:
+
+<!-- spell-checker: disable -->
+```yaml
+$ git log --all --decorate --oneline --graph
+* d824228 (HEAD -> master) Adicionados temperos ào purê de batata monstro
+* 7080b42 Criada receita de bolo minimalista
+* 5245cc6 Criada receita de Pure de Batata Monstro
+```
+<!-- spell-checker: enable -->
+
+Podemos ver que até agora nossa história é uma linha reta, mas daqui a pouco
+isso vai ficar mais interessante.
+
+Vamos criar um novo ramo para colocar a versão sem farinha. Podemos listar os
+ramos atuais com `git branch` e criar um novo com esse comando também.
+
+```yaml
+$ git branch
+* master
+$ git branch bolo-sem-farinha  # Criamos o novo ramo
+$ git branch
+  bolo-sem-farinha
+* master
+```
+
+Podemos ver isso com o log também.
+
+<!-- spell-checker: disable -->
+```yaml
+$ git log --all --decorate --oneline --graph
+* d824228 (HEAD -> master, bolo-sem-farinha) Adicionados temperos ào purê de batata monstro
+* 7080b42 Criada receita de bolo minimalista
+* 5245cc6 Criada receita de Pure de Batata Monstro
+```
+<!-- spell-checker: enable -->
+
+Não teve muita diferença ainda, só apareceu o *bolo-sem-farinha* entre
+parenteses. Vou explicar melhor essas coisas agora. Nos parenteses estão os
+ramos que acompanham aquele commit em específico, no caso *master* e
+*bolo-sem-farinha*, e aquele *HEAD* é a nossa "cabeça", o commit que estamos
+vendo no momento, e tem uma seta para *master* por que estamos nesse ramo.
+Podemos confirmar que é esse o caso nos movendo para um commit anterior.
+
+<!-- spell-checker: disable -->
+```yaml
+$ git checkout 7080b42
+Note: checking out '7080b42'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by performing another checkout.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -b with the checkout command again. Example:
+
+  git checkout -b <new-branch-name>
+
+HEAD is now at 7080b42 Criada receita de bolo minimalista
+$ git log --all --decorate --oneline --graph
+* d824228 (master, bolo-sem-farinha) Adicionados temperos ào purê de batata monstro
+* 7080b42 (HEAD) Criada receita de bolo minimalista
+* 5245cc6 Criada receita de Pure de Batata Monstro
+```
+<!-- spell-checker: enable -->
+
+E agora podemos ver que nossa HEAD está no commit anterior, e também podemos
+entender melhor essa mensagem que aparece quando voltamos. Ela nos diz que
+estamos no modo de "cabeça desconectada", isso por que não estamos em nenhum
+ramo, então se fizermos commits aqui e depois usarmos `git checkout` sem ter
+criado um ramo ali, vamos acabar perdendo todas nossas alterações.
+
+Então vamos logo para o *bolo-sem-farinha* para atualizar a receita.
+
+<!-- spell-checker: disable -->
+```yaml
+$ git checkout bolo-sem-farinha
+Previous HEAD position was 7080b42 Criada receita de bolo minimalista
+Switched to branch 'bolo-sem-farinha'
+$ git log --all --decorate --oneline --graph
+* d824228 (HEAD -> bolo-sem-farinha, master) Adicionados temperos ào purê de batata monstro
+* 7080b42 Criada receita de bolo minimalista
+* 5245cc6 Criada receita de Pure de Batata Monstro
+```
+<!-- spell-checker: enable -->
+
+Aqui podemos editar o bolo minimalista e commitar.
+
+```markdown
+# Ingredientes
+ - 3 Colheres de açúcar
+ - 1 Colher de nescau
+
+# Modo de preparo
+Misture tudo em um pote e coma.
+
+Rende 1 pote.
+```
+
+<!-- spell-checker: disable -->
+```yaml
+$ git status
+On branch bolo-sem-farinha
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+        modified:   bolo-minimalista.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+$ git add bolo-minimalista.md
+$ git commit -m "Tirada a farinha do bolo"
+[bolo-sem-farinha bf1e2b9] Tirada a farinha do bolo
+ 1 file changed, 1 deletion(-)
+$ git log --all --decorate --oneline --graph
+* bf1e2b9 (HEAD -> bolo-sem-farinha) Tirada a farinha do bolo
+* d824228 (master) Adicionados temperos ào purê de batata monstro
+* 7080b42 Criada receita de bolo minimalista
+* 5245cc6 Criada receita de Pure de Batata Monstro
+```
+<!-- spell-checker: enable -->
+
+Agora vamos criar outro ramo para colocar óleo. Só que veja que vamos ter que
+primeiro voltar para o *master* para fazer isso, já que queremos usar o bolo
+original como base.
+
+```yaml
+$ git checkout master
+Switched to branch 'master'
+```
+
+Como é bastante comum criarmos um ramo novo e mudarmos para ele, o git tem um
+jeito de fazer isso de uma vez só, usando o `git checkout -b`, que economiza um
+comando.
+
+```yaml
+$ git checkout -b bolo-com-oleo
+Switched to a new branch 'bolo-com-oleo'
+```
+
+Aqui podemos alterar a receita colocando óleo e commitar quando terminarmos.
+
+```markdown
+# Ingredientes
+ - 4 Colheres de trigo
+ - 3 Colheres de açúcar
+ - 1 Colher de nescau
+ - 1 Colher de óleo de amêndoas
+
+# Modo de preparo
+Misture tudo em um pote e leve ao micro-ondas por 1 minuto.
+
+Rende 1 pote.
+```
+
+```yaml
+$ git status
+On branch bolo-com-oleo
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+        modified:   bolo-minimalista.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+$ git add bolo-minimalista.md
+$ git commit -m "Adicionado óleo ao bolo"
+[bolo-com-oleo c94bd69] Adicionado óleo ao bolo
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+```
+
+Agora vamos abrir nossa história e olha só que legal:
+
+<!-- spell-checker: disable -->
+```yaml
+$ git log --all --decorate --oneline --graph
+* c94bd69 (HEAD -> bolo-com-oleo) Adicionado óleo ao bolo
+| * bf1e2b9 (bolo-sem-farinha) Tirada a farinha do bolo
+|/
+* d824228 (master) Adicionados temperos ào purê de batata monstro
+* 7080b42 Criada receita de bolo minimalista
+* 5245cc6 Criada receita de Pure de Batata Monstro
+```
+<!-- spell-checker: enable -->
+
+Nossa história se separa em duas no momento em que testamos as alterações,
+podemos fazer isso com quantos ramos quisermos em quantos computadores separado
+quisermos. Dois desenvolveres/escritores/chefs/poetas/editores/jornalistas
+podem trabalhar ao mesmo tempo em um mesmo arquivo assim, cada um cria um ramo
+novo que pode avançar independentemente dos outros e quando for a hora, um pode
+ser descartado, ou eles podem ser mesclados à vontade - possívelmente até de
+formas diferentes em ramos separados.
+
+Essa é uma das coisas que torna o Git tão bom, ele é colaborativo por padrão,
+não é à toa que é usado em quase todo projeto de software do mundo.
 
