@@ -197,7 +197,20 @@ Changes to be committed:
 
 Agora podemos ver que o arquivo foi para um lugar diferente, para "Changes to
 be commited" (mudanças a serem commitadas) e está marcado como um arquivo novo
-(new file). Então, como tudo parece certo, podemos commitar nossa receita.
+(new file). Então, como tudo parece certo, quase podemos commitar nossa
+receita.  Se tentarmos fazer isso agora, o git vai nos dar uma mensagem de erro
+um pouco grande e desagradável (pode tentar se quiser), isso por que precisamos
+configurar nosso nome e e-mail para o git poder rastrear a autoria de cada
+alteração. Fazer isso é bem simples, precisamos usar o comando `git config` com
+a opção `--global` para que essa configuração se aplique à todos os nossos
+repositórios.
+
+<!-- spell-checker: disable -->
+```yaml
+$ git config --global user.name "Eduardo Mosko"
+$ git config --global user.email "eduardo@moskoscode.com"
+```
+<!-- spell-checker: enable -->
 
 ```yaml
 $ git commit -m "Criada receita de Pure de Batata Monstro"
