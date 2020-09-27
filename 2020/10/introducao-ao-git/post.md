@@ -9,17 +9,20 @@
  - [X] Editando arquivos
  - [X] Ramificando
  - [ ] Mesclando alterações
- - [ ] Clonar, Pull & Push
 
 # Ideias de Tĩtulo
-### Tĩtulo
+### Título
  - Git para iniciantes
  - Introdução ao Git
  - Mas o que carvalhos é Git?
+ - Gerenciando versões com o Git
+
+Talvez desse para colocar um título com um apelo mais generalizado também, só
+não sei como isso seria.
 
 ### Subtĩtulo
  - Uma breve introdução à gerenciamento de versão
- - Imagine viajar no tempo - com Git isso é *quase* possível
+ - Imagine viajar através do tempo e para outras dimensões - com Git isso é *quase* possível
  - Gerencie seus projetos, poemas e receitas
 
 -->
