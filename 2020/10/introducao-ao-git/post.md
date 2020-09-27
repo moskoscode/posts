@@ -1,4 +1,3 @@
-
 <!---
 
 # A ser abordado
@@ -17,8 +16,7 @@
  - Mas o que carvalhos é Git?
  - Gerenciando versões com o Git
 
-Talvez desse para colocar um título com um apelo mais generalizado também, só
-não sei como isso seria.
+Talvez desse para colocar um título com um apelo mais generalizado também, só não sei como isso seria.
 
 ### Subtĩtulo
  - Uma breve introdução à gerenciamento de versão
@@ -26,7 +24,6 @@ não sei como isso seria.
  - Gerencie seus projetos, poemas e receitas
 
 -->
-
 # O que é e por que usar o git
 
 Muitas áreas de trabalho tem um ciclo de produção que gira em torno de novos
@@ -62,7 +59,7 @@ Tudo isso parece ótimo, então como usar? Primeiro precisamos instalar o git.
 
 No o linux/BSD instalar o git é muito fácil, normalmente basta um
 
-```yaml
+```shell
 $ sudo {gerenciador de pacotes} {instalar} git
 ```
 
@@ -78,7 +75,7 @@ de comando, mas eu te garanto que vai ser bem simples e tranquilo.
 
 Para testar a instalação, abra o terminal (Git BASH, no Windows) e digite
 
-```yaml
+```shell
 $ git --version
 ```
 
@@ -86,7 +83,7 @@ Se aparecer qualquer coisa diferente do que sua versão, provavelmente aconteceu
 algo de errado na instalação e você deve dar uma olhada nisso antes de
 continuar. No meu caso o resultado é o seguinte:
 
-```yaml
+```shell
 $ git --version
 git version 2.20.1
 ```
@@ -102,7 +99,7 @@ projeto, só que com um histórico de todas as mudanças). Criar um é bem simpl
 basta criar uma pasta e colocar o comando `git init` nela.
 
 <!-- spell-checker: disable -->
-```yaml
+```shell
 $ mkdir meu-repositorio  # Cria uma pasta pela linha de comando
 $ cd meu-repositorio     # Entra na pasta
 $ git init               # Inicializa o repositório
@@ -116,7 +113,7 @@ Vamos ver alguns comandos do git então. Para obtermos informações sobre o
 estado atual do nosso repo, podemos usar o `git status`
 
 <!-- spell-checker: disable -->
-```yaml
+```shell
 $ git status
 On branch master
 
@@ -160,7 +157,7 @@ Podemos dar ao arquivo o nome de `pure-de-batata-monstro.md` e salvar.
 Agora, se dermos git status de novo
 
 <!-- spell-checker: disable -->
-```yaml
+```shell
 $ git status
 On branch master
 
@@ -181,11 +178,11 @@ commit que os inclua. Podemos mudar isso usando o `git add` para adicionar esse
 arquivo para nossa *staging area* (área de preparação) na qual preparamos o
 commit que vamos fazer.
 
-```yaml
+```shell
 $ git add pure-de-batata-monstro.md
 ```
 
-```yaml
+```shell
 $ git status
 On branch master
 
@@ -200,9 +197,9 @@ Changes to be committed:
 
 Agora podemos ver que o arquivo foi para um lugar diferente, para "Changes to
 be commited" (mudanças a serem commitadas) e está marcado como um arquivo novo
-(new file). Então, como tudo parece certo, quase podemos commitar nossa
-receita - se tentarmos fazer isso agora, o git vai nos dar uma mensagem de erro
-um pouco grande e desagradável (pode tentar se quiser).
+(new file). Então, como tudo parece certo, quase podemos commitar nossa receita
+- se tentarmos fazer isso agora, o git vai nos dar uma mensagem de erro um
+pouco grande e desagradável (pode tentar se quiser).
 
 Isso é por que ainda precisamos configurar nosso nome e e-mail para o git poder
 rastrear a autoria de cada alteração. Fazer isso é bem simples, precisamos usar
@@ -210,7 +207,7 @@ o comando `git config` com a opção `--global` para que essa configuração se
 aplique à todos os nossos repositórios.
 
 <!-- spell-checker: disable -->
-```yaml
+```shell
 $ git config --global user.name "Eduardo Mosko"
 $ git config --global user.email "eduardo@moskoscode.com"
 ```
@@ -218,7 +215,7 @@ $ git config --global user.email "eduardo@moskoscode.com"
 
 Agora sim podemos usar `git commit -m` para fazer um commit com uma mensagem.
 
-```yaml
+```shell
 $ git commit -m "Criada receita de Pure de Batata Monstro"
 [master (root-commit) 4400893] Criada receita de Pure de Batata Monstro
  1 file changed, 11 insertions(+)
@@ -228,7 +225,7 @@ $ git commit -m "Criada receita de Pure de Batata Monstro"
 Nesse relatório podemos ver que o `pure-de-batata-monstro.md` foi criado e que
 ele teve 11 linhas inseridas. Vamos ver como o repositório está agora.
 
-```yaml
+```shell
 $ git status
 On branch master
 nothing to commit, working tree clean
@@ -251,7 +248,7 @@ Misture tudo em um pote e coma.
 Rende 1 pote.
 ```
 
-```yaml
+```shell
 $ git status
 On branch master
 Untracked files:
@@ -264,7 +261,7 @@ nothing added to commit but untracked files present (use "git add" to track)
 
 Podemos ver que o git já o identifica como arquivo novo, vamos adicionar e commitar.
 
-```yaml
+```shell
 $ git add bolo-minimalista.md
 $ git commit -m "Criada receita de bolo minimalista"
 [master 4408c82] Criada receita de bolo minimalista
@@ -306,7 +303,7 @@ Rende 3 porções
 Agora sim, bem mais saboroso. Vamos dar uma olhada no git para ver se estamos
 prontos para salvar essa nova versão.
 
-```yaml
+```shell
 $ git status
 On branch master
 Changes not staged for commit:
@@ -325,7 +322,7 @@ alterações feitas, pode ser que elas não caibam no seu terminal, se esse for 
 caso o git vai colocar elas em um *pager* que você pode navegar com as setinhas
 do teclado e apertar ***q*** para fechar.
 
-```yaml
+```shell
 $ git diff
 diff --git a/pure-de-batata-monstro.md b/pure-de-batata-monstro.md
 index 7a6c5fd..1445d91 100644
@@ -373,7 +370,7 @@ você.
 Mas voltando às receitas, vamos adicionar o arquivo todo e fazer um novo
 commit.
 
-```yaml
+```shell
 $ git add pure-de-batata-monstro.md
 $ git commit -m "Adicionados temperos ào purê de batata monstro"
 [master 086d717] Adicionados temperos ào purê de batata monstro
@@ -386,7 +383,7 @@ Podemos ver todo nosso histórico de mudanças com o comando `git log` (esse
 quase sempre usa um pager)
 
 <!-- spell-checker: disable -->
-```yaml
+```shell
 $ git log
 commit 086d71707d9cb0a55e1e1c2ef4d1fedcf51834a6 (HEAD -> master)
 Author: Eduardo Mosko <eduardo@moskoscode.com>
@@ -417,7 +414,7 @@ exemplo, para ver a quantidade de linhas alteradas em cada commit podemos usar
 
 
 <!-- spell-checker: disable -->
-```yaml
+```shell
 $ git log --stat
 commit d824228624e2378bd25ce31aba6b5e0533b4f01c (HEAD -> master)
 Author: Eduardo Mosko <eduardo@moskoscode.com>
@@ -476,7 +473,7 @@ Podemos acompanhar o que estamos fazendo usando algumas opções do `git log` qu
 vão mostrar um gráfico bonitinho dos nossos ramos. O comando é esse:
 
 <!-- spell-checker: disable -->
-```yaml
+```shell
 $ git log --all --decorate --oneline --graph
 * d824228 (HEAD -> master) Adicionados temperos ào purê de batata monstro
 * 7080b42 Criada receita de bolo minimalista
@@ -490,7 +487,7 @@ isso vai ficar mais interessante.
 Vamos criar um novo ramo para colocar a versão sem farinha. Podemos listar os
 ramos atuais com `git branch` e criar um novo com esse comando também.
 
-```yaml
+```shell
 $ git branch
 * master
 $ git branch bolo-sem-farinha  # Criamos o novo ramo
@@ -502,7 +499,7 @@ $ git branch
 Podemos ver isso com o log também.
 
 <!-- spell-checker: disable -->
-```yaml
+```shell
 $ git log --all --decorate --oneline --graph
 * d824228 (HEAD -> master, bolo-sem-farinha) Adicionados temperos ào purê de batata monstro
 * 7080b42 Criada receita de bolo minimalista
@@ -518,7 +515,7 @@ vendo no momento, e tem uma seta para *master* por que estamos nesse ramo.
 Podemos confirmar que é esse o caso nos movendo para um commit anterior.
 
 <!-- spell-checker: disable -->
-```yaml
+```shell
 $ git checkout 7080b42
 Note: checking out '7080b42'.
 
@@ -548,7 +545,7 @@ criado um ramo ali, vamos acabar perdendo todas nossas alterações.
 Então vamos logo para o *bolo-sem-farinha* para atualizar a receita.
 
 <!-- spell-checker: disable -->
-```yaml
+```shell
 $ git checkout bolo-sem-farinha
 Previous HEAD position was 7080b42 Criada receita de bolo minimalista
 Switched to branch 'bolo-sem-farinha'
@@ -573,7 +570,7 @@ Rende 1 pote.
 ```
 
 <!-- spell-checker: disable -->
-```yaml
+```shell
 $ git status
 On branch bolo-sem-farinha
 Changes not staged for commit:
@@ -599,7 +596,7 @@ Agora vamos criar outro ramo para colocar óleo. Só que veja que vamos ter que
 primeiro voltar para o *master* para fazer isso, já que queremos usar o bolo
 original como base.
 
-```yaml
+```shell
 $ git checkout master
 Switched to branch 'master'
 ```
@@ -608,7 +605,7 @@ Como é bastante comum criarmos um ramo novo e mudarmos para ele, o git tem um
 jeito de fazer isso de uma vez só, usando o `git checkout -b`, que economiza um
 comando.
 
-```yaml
+```shell
 $ git checkout -b bolo-com-oleo
 Switched to a new branch 'bolo-com-oleo'
 ```
@@ -628,7 +625,7 @@ Misture tudo em um pote e leve ao micro-ondas por 1 minuto.
 Rende 1 pote.
 ```
 
-```yaml
+```shell
 $ git status
 On branch bolo-com-oleo
 Changes not staged for commit:
@@ -647,7 +644,7 @@ $ git commit -m "Adicionado óleo ao bolo"
 Agora vamos abrir nossa história e olha só que legal:
 
 <!-- spell-checker: disable -->
-```yaml
+```shell
 $ git log --all --decorate --oneline --graph
 * c94bd69 (HEAD -> bolo-com-oleo) Adicionado óleo ao bolo
 | * bf1e2b9 (bolo-sem-farinha) Tirada a farinha do bolo
@@ -678,7 +675,7 @@ criando esse ramo a partir de um dos dois que criamos, como já estamos no
 `bolo-com-oleo` vamos a partir desse mesmo.
 
 <!-- spell-checker: disable -->
-```yaml
+```shell
 $ git status
 On branch bolo-com-oleo
 nothing to commit, working tree clean
@@ -705,7 +702,7 @@ Você pode ver como configurar
 ou pode continuar se estiver preparado para usar *um* comando no editor de
 texto que abrir.
 
-```yaml
+```shell
 $ git merge bolo-sem-farinha
 ```
 
@@ -729,7 +726,7 @@ demais, não sei se ficou claro -->
 Podemos então dar uma olhada em como nossa história ficou.
 
 <!-- spell-checker: disable -->
-```yaml
+```shell
 $ git log --all --decorate --oneline --graph
 *   3ed3f8d (HEAD -> bolo-sem-farinha-com-oleo) Merge branch 'bolo-sem-farinha' into bolo-sem-farinha-com-oleo
 |\
@@ -782,7 +779,7 @@ omitir o `-m` e escrever nossa mensagem (potencialmente com múltiplas linhas)
 por lá.
 
 <!-- spell-checker: disable -->
-```yaml
+```shell
 $ git commit
 [master a6ca7af] Usando o liquidificador ao invés do pote
  1 file changed, 1 insertion(+), 1 deletion(-)
@@ -801,12 +798,11 @@ $ git log --all --decorate --oneline --graph
 ```
 <!-- spell-checker: enable -->
 
-Podemos ver que nossa história está ficando um tanto complicada, mas sem
-problemas, o git lida bem com isso.
+Podemos ver que nossa história está ficando um tanto complicada, mas sem problemas, o git lida bem com isso.
 
 Agora vamos mesclar tudo no master para ver como é o conflito.
 
-```yaml
+```shell
 $ git merge bolo-sem-farinha-com-oleo
 Auto-merging bolo-minimalista.md
 CONFLICT (content): Merge conflict in bolo-minimalista.md
@@ -816,7 +812,7 @@ Automatic merge failed; fix conflicts and then commit the result.
 Isso, conflito no `bolo-minimalista.md`. Às vezes dá conflito em mais do que um
 arquivo, então podemos ver todos que temos que arrumar com o `git status`.
 
-```yaml
+```shell
 $ git status
 On branch master
 You have unmerged paths.
@@ -831,8 +827,7 @@ Unmerged paths:
 no changes added to commit (use "git add" and/or "git commit -a")
 ```
 
-Tudo que está em "Unmerged paths" (caminhos não mesclados) teve algum erro que
-temos que arrumar. Vamos abrir o arquivo para ver do que se trata.
+Tudo que está em "Unmerged paths" (caminhos não mesclados) teve algum erro que temos que arrumar. Vamos abrir o arquivo para ver do que se trata.
 
 ```markdown
 # Ingredientes
@@ -860,8 +855,7 @@ Essa parte
 >>>>>>> bolo-sem-farinha-com-oleo
 ```
 
-Que delimita o conflito, podem haver vários desses em um arquivo e todos devem
-ser arrumados antes de mesclar. O que rola neles é tipo
+Que delimita o conflito, podem haver vários desses em um arquivo e todos devem ser arrumados antes de mesclar. O que rola neles é tipo
 
 ```
 <<<<<<< HEAD
@@ -871,8 +865,7 @@ ser arrumados antes de mesclar. O que rola neles é tipo
 >>>>>>> bolo-sem-farinha-com-oleo
 ```
 
-Aí você pode substituir tudo isso por o que deve ficar alí, marcar o arquivo
-como resolvido com `git add` e commitar. No caso mesclei assim:
+Aí você pode substituir tudo isso por o que deve ficar alí, marcar o arquivo como resolvido com `git add` e commitar. No caso mesclei assim:
 
 ```markdown
 # Ingredientes
@@ -886,7 +879,7 @@ Bata tudo no liquidificador, leve ao micro-ondas por 1 minuto e sirva.
 Rende 1 pote.
 ```
 
-```yaml
+```shell
 $ git add bolo-minimalista.md
 $ git status
 On branch master
@@ -901,10 +894,9 @@ $ git commit
 [master 740c159] Merge branch 'bolo-sem-farinha-com-oleo'
 ```
 
-E belezinha, tudo resolvido. Podemos agora deletar todos os ramos que
-terminamos de usar com `git branch -d`
+E belezinha, tudo resolvido. Podemos agora deletar todos os ramos que terminamos de usar com `git branch -d`
 
-```yaml
+```shell
 $ git branch
   bolo-com-oleo
   bolo-sem-farinha
@@ -919,7 +911,7 @@ Deleted branch bolo-sem-farinha-com-oleo (was 3ed3f8d).
 E nossa história ficou assim:
 
 <!-- spell-checker: disable -->
-```yaml
+```shell
 $ git log --all --decorate --oneline --graph
 *   740c159 (HEAD -> master) Merge branch 'bolo-sem-farinha-com-oleo'
 |\
@@ -950,10 +942,11 @@ formato digital e a super completa [documentação do
 github](https://docs.github.com/pt/free-pro-team@latest/github/using-git/getting-started-with-git-and-github).
 
 Ambos são super completos e cobrem também (em quantidades variadas) o
-[github](https://github.com), que é uma plataforma online para você armazenar seus
-repositórios, tanto de forma pública como privada.
+[github](https://github.com), que é uma plataforma online para você armazenar
+seus repositórios, tanto de forma pública como privada.
 
 Inclusive os posts aqui do blog são gerenciados com git e armazenados no [nosso
 github](https://github.com/moskoscode), se quiser contribuir ou só dar uma
 olhada, dê uma passadinha por lá.
+
 
