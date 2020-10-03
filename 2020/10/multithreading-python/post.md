@@ -4,7 +4,8 @@
  - [X] Problemas single-thread
  - [X] O que é multi-threading
  - [X] Como criar threads
- - [ ] GIL
+ - [X] GIL
+ - [ ] Sincronização
  - [ ] Threading para IO
  - [ ] MultiThreading vs Multiprocessing
 
@@ -84,6 +85,29 @@ user    0m0.021s
 sys     0m0.013s
 ```
 
-E como podemos ver o programa concluí em 1 segundo, sendo que demoraria 2
+E como podemos ver: o programa concluí em 1 segundo, sendo que demoraria 2
 normalmente.
+
+Porém, em Python existem alguns poréns nessa coisa toda. Enquanto em outras
+linguagens é comum o uso de threads para fazer cálculos em paralelo, em python
+isso não é possível, já que exite algo conhecido como a **GIL**. Ela é a
+*Global Interpreter Lock* (Trava Global do Interpretador) e é o motivo de muita
+dificuldade para escrever programas em Python que usem múltiplos cores do
+processador. Ela é uma trava que impede que o interpretador Python (que lê o
+código e gera o código a ser executado pela CPU) seja executado em mais de um
+thread ao mesmo tempo, ela foi criada para resolver alguns problemas
+encontrados pelos desenvolvedores do Python e infelizmente até hoje coloca uma
+barreira no poder que multithreading têm.
+
+Por causa disso, threading no python serve apenas para resolver apenas
+problemas que chamamos de *"IO bound"* (Determinado por IO), que é qualquer
+coisa que demore por que está esperando por IO (Input, entrada ou Output,
+saída) como carregar imagens do disco, enviar um pedido para um servidor, fazer
+download de vídeos, esse tipo de coisa.
+
+Se você realmente precisa executar cálculos pesados em paralelo, é possível
+usar *multiprocessing* (que tem um caminhão de de outros problemas), usar algo como
+o projeto `Cython` (que permite transpilar Python para C) ou talvez considerar
+se outra linguagem não é mais adequada para o trabalho que você está tentando
+fazer.
 
