@@ -14,17 +14,16 @@
 
 -->
 
-Se você já leu uma quantidade razoável de código python, deve ter se deparado
-com algo como `def processar(*args, **kwargs)` e se perguntou *Mas o que é
-isso?*
+Se você já leu uma quantidade razoável de código Python deve ter se deparado
+com algo como `def processar(*args, **kwargs)` e ficou em dúvida sobre o que se tratava.
 
-É bem simples: é um jeito de uma função aceitar um número arbitrário de
-argumentos, com ou sem palavra chave. Mais específicamente é um jeito de você
+É bem simples: isto é um jeito de uma **função** aceitar um número **arbitrário de
+argumentos** - com ou sem palavra-chave. Mais especificamente, é um modo de você
 pegar uma lista (no caso do `*`) ou um dicíonario (no caso do `**`) e usar os
-conteúdos dele como se você tivesse escrito os conteúdos por extenso.
+conteúdos dele como se tivesse escrito os **conteúdos** por extenso.
 
-Por exemplo se eu tiver uma lista `a` e usar print para mostrar os resultados,
-vai ficar assim:
+Por exemplo, se eu tiver uma **lista** `a` e usar *print* para mostrar os resultados,
+o resultado será o seguinte:
 
 ```python
 >>> a = [1, 2, 3, 4]
@@ -32,24 +31,24 @@ vai ficar assim:
 [1, 2, 3, 4]
 ```
 
-Vai ter uma formatação para indicar que estou imprimindo uma lista, não vários
-números. Se eu fosse imprimir os números em si, seria assim:
+Haverá uma **formatação** para indicar que estou **imprimindo** uma lista, ao invés de vários
+números. Caso eu fosse imprimir os números em si, seria assim:
 
 ```python
 >>> print(1, 2, 3, 4)
 1 2 3 4
 ```
 
-E aí o `*` é um jeito de passar o conteúdo da lista **como se** eu tivesse
-escrito eles um depois do outro.
+Então o `*` é um jeito de passar o **conteúdo** da lista como se eu tivesse
+**escrito** eles um após o outro.
 
 ```python
 >>> print(*a)
 1 2 3 4
 ```
 
-E note que esse operador se aplica à qualquer iterável: `set`s, `list`s,
-`tuple`s e até `dict`s, `generator`s e classes próprias
+•  Note que esse **operador** se aplica a **qualquer** iterável: `set`s, `list`s,
+`tuple`s e até `dict`s, `generator`s e classes próprias.
 
 ```python
 >>> print( *set([10, 20, 2, 4, 10, 5]) )                # Set
@@ -66,10 +65,9 @@ nome aa
 7 2 7
 ```
 
-Além disso podemos usar o `*` para receber uma quantidade qualquer de
-argumentos em uma função. Por exemplo o próprio `print()` que estamos usando
-aceita desde 1 até infinitos argumentos, podemos imitar isso com uma definição
-assim:
+Além disso, podemos usar o `*` para **receber** uma quantidade qualquer de
+**argumentos em uma função**. Por exemplo, o próprio `print()` que estamos usando
+aceita desde *1* até **infinitos** argumentos. Conseguimos recriar isso com a seguinte definição:
 
 <!-- spell-checker: disable -->
 ```python
@@ -78,7 +76,7 @@ def argumentos_variaveis(arg, *args):
 ```
 <!-- spell-checker: enable -->
 
-E aí podemos usar essa função com quantos argumentos quisermos (no minímo 1)
+A partir disso, podemos usar essa função com quantos **argumentos** quisermos - com o **valor mínimo** sendo 1.
 
 <!-- spell-checker: disable -->
 ```python
@@ -93,10 +91,9 @@ Argumento 1: (2700,), Restante: ((37, 5), 6)
 ```
 <!-- spell-checker: enable -->
 
-Por causa dessas duas possibilidades (passar argumentos e recebe-los) que o
-`*args` é tão usado em decoradores ou qualquer função que "embrulhe" outra. Por
-exemplo, se quiséssemos saber exatamente **quando** cada print foi chamado
-podemos usar isso.
+São essas duas possibilidades - **passar** e **receber** argumentos - que tornam o
+`*args` tão usado em decoradores ou qualquer função que "embrulhe" outra. Por
+exemplo, se quiséssemos saber exatamente **quando** cada *print* foi chamado, faríamos da seguinte maneira:
 
 ```python
 import time
@@ -106,8 +103,8 @@ def print_quando(*args):  # Aceita argumentos quaisqueres
 
 ```
 
-E ai alem da saida normal do print, quando chamarmos essa função vamos ver o
-horário dessa execução.
+Além da saída normal do *print*, quando **chamarmos** essa função vamos ver o
+horário de **execução**:
 
 ```python
 >>> print_quando(10, 20, 30)
@@ -116,13 +113,12 @@ horário dessa execução.
 [ Sun Oct 11 20:52:45 2020 ]:   Uma mensagem pra vocês aí
 ```
 
-Tá, até agora só falamos do `*args` e o `**kwargs`?
+*Tá, até agora você só falou do `*args` e o `**kwargs`?*
 
-Pois é, eu me enrolei... mas é que eles são basicamente a mesma coisa!
+Pois é, eu me enrolei! Porém o ponto é que eles são, basicamente, a **mesma coisa**!
 
-A única diferença é que o `**` é bom pra `dict`s porque ele mantém as palavras
-chave. Por exemplo se tivermos uma função `dar_nota()` e tentar encaminhar
-argumentos para ela com `encaminhar()`, sendo que elas são assim:
+A **única** diferença é que o `**` é bom para `dict`s, pois mantém as **palavras-chave**. Por exemplo, se tivermos uma função `dar_nota()` e tentarmos **encaminhar**
+argumentos para ela com `encaminhar()`:
 
 ```python
 def dar_nota(aluno="", nota=0):
@@ -132,7 +128,7 @@ def encaminhar(*args):
     dar_nota(*args)
 ```
 
-Não vamos conseguir. Tipo... Até vamos, mas não totalmente, olha:
+Não conseguimos! Tipo, até dá, mas não totalmente. Segue o exemplo:
 
 ```python
 >>> dar_nota("Eduardo", 2000)
@@ -141,8 +137,8 @@ A nota do Eduardo foi 2000
 A nota do Nicolas foi 2
 ```
 
-Nesse caso básico funciona, mas já se quisermos usar as palavras chave não vai
-dar.
+Neste caso, deu certo. Porém se quisermos usar as **palavras-chave** não vai
+funcionar.
 
 ```python
 >>> dar_nota(nota=20, aluno="Pedro Cássio")
@@ -153,9 +149,8 @@ Traceback (most recent call last):
 TypeError: encaminhar() got an unexpected keyword argument 'nota'
 ```
 
-Levamos um `TypeError` na cara, mas felizmente existe o `**kwargs` que preserva
-o nome dos argumentos. Se redeclararmos `encaminhar()` usando-o resolvemos
-todos os erros:
+Levamos um `TypeError` na cara, mas , felizmente, existe o `**kwargs` - que **preserva**
+o nome dos argumentos. Se redeclararmos `encaminhar()` usando este recurso, todos os problemas são **corrigidos**:
 
 ```python
 >>> def encaminhar(*args, **kwargs):
@@ -165,5 +160,17 @@ todos os erros:
 A nota do Terroso Carlos foi 623
 ```
 
-E... é isso, como tudo em python, super duper simples. Até semana que vem.
+E... é isso. Super simples - assim  como tudo em Python! 
+
+Até semana que vem!
+
+---
+
+Gostou de aprender sobre isso? **Quer aprender mais?** Se **inscreva** na nossa [newsletter](https://moskoscode.com/newsletter) e nos siga nas nossas [redes sociais](https://linktr.ee/moskoscode) para não perder novos posts como esse!
+
+Se gostou, **compartilhe!** E até amanhã ;)
+
+[Instagram](https://www.instagram.com/moskoscode)
+[Facebook](https://www.facebook.com/moskoscode)
+[Twitter](https://www.twitter.com/moskoscode)
 
