@@ -15,15 +15,16 @@
 -->
 
 Se você já leu uma quantidade razoável de código Python deve ter se deparado
-com algo como `def processar(*args, **kwargs)` e ficou em dúvida sobre o que se tratava.
+com algo como `def processar(*args, **kwargs)` e ficou em dúvida sobre o que
+esses `*` e `**` se tratavam.
 
 É bem simples: isto é um jeito de uma **função** aceitar um número **arbitrário de
 argumentos** - com ou sem palavra-chave. Mais especificamente, é um modo de você
-pegar uma lista (no caso do `*`) ou um dicíonario (no caso do `**`) e usar os
-conteúdos dele como se tivesse escrito os **conteúdos** por extenso.
+pegar uma lista (no caso do `*`) ou um dicionário (no caso do `**`) e usar o
+conteúdo dele como se tivesse os escrito por extenso.
 
-Por exemplo, se eu tiver uma **lista** `a` e usar *print* para mostrar os resultados,
-o resultado será o seguinte:
+Por exemplo, se eu tiver uma **lista** `a` e usar *print* para mostrá-la, o
+resultado será o seguinte:
 
 ```python
 >>> a = [1, 2, 3, 4]
@@ -31,8 +32,8 @@ o resultado será o seguinte:
 [1, 2, 3, 4]
 ```
 
-Haverá uma **formatação** para indicar que estou **imprimindo** uma lista, ao invés de vários
-números. Caso eu fosse imprimir os números em si, seria assim:
+Haverá uma **formatação** para indicar que estou **imprimindo** uma lista ao
+invés de vários números. Caso eu fosse imprimir os números em si, seria assim:
 
 ```python
 >>> print(1, 2, 3, 4)
@@ -40,15 +41,15 @@ números. Caso eu fosse imprimir os números em si, seria assim:
 ```
 
 Então o `*` é um jeito de passar o **conteúdo** da lista como se eu tivesse
-**escrito** eles um após o outro.
+**escrito** ele um item de cada vez.
 
 ```python
 >>> print(*a)
 1 2 3 4
 ```
 
-•  Note que esse **operador** se aplica a **qualquer** iterável: `set`s, `list`s,
-`tuple`s e até `dict`s, `generator`s e classes próprias.
+• Note que esse **operador** se aplica a **qualquer** iterável: `set`s,
+`list`s, `tuple`s e até `dict`s, `generator`s e classes customizadas.
 
 ```python
 >>> print( *set([10, 20, 2, 4, 10, 5]) )                # Set
@@ -66,8 +67,9 @@ nome aa
 ```
 
 Além disso, podemos usar o `*` para **receber** uma quantidade qualquer de
-**argumentos em uma função**. Por exemplo, o próprio `print()` que estamos usando
-aceita desde *1* até **infinitos** argumentos. Conseguimos recriar isso com a seguinte definição:
+**argumentos em uma função**. Por exemplo, o próprio `print()` que estamos
+usando aceita desde *1* até **infinitos** argumentos. Conseguimos recriar essa
+funcionalidade com a seguinte definição:
 
 <!-- spell-checker: disable -->
 ```python
@@ -76,7 +78,10 @@ def argumentos_variaveis(arg, *args):
 ```
 <!-- spell-checker: enable -->
 
-A partir disso, podemos usar essa função com quantos **argumentos** quisermos - com o **valor mínimo** sendo 1.
+
+A partir disso, podemos usar essa função com quantos **argumentos** quisermos -
+com a **quantidade mínima** sendo 1.
+
 
 <!-- spell-checker: disable -->
 ```python
@@ -91,9 +96,10 @@ Argumento 1: (2700,), Restante: ((37, 5), 6)
 ```
 <!-- spell-checker: enable -->
 
-São essas duas possibilidades - **passar** e **receber** argumentos - que tornam o
-`*args` tão usado em decoradores ou qualquer função que "embrulhe" outra. Por
-exemplo, se quiséssemos saber exatamente **quando** cada *print* foi chamado, faríamos da seguinte maneira:
+São essas duas possibilidades - **passar** e **receber** argumentos - que
+tornam o `*args` tão usado em decoradores ou qualquer função que "embrulhe"
+outra. Por exemplo, se quiséssemos saber exatamente **quando** cada *print* foi
+chamado, faríamos da seguinte maneira:
 
 ```python
 import time
@@ -113,12 +119,14 @@ horário de **execução**:
 [ Sun Oct 11 20:52:45 2020 ]:   Uma mensagem pra vocês aí
 ```
 
-*Tá, até agora você só falou do `*args` e o `**kwargs`?*
+<i>Tá, até agora você só falou do `*args` e o `**kwargs`?</i>
 
-Pois é, eu me enrolei! Porém o ponto é que eles são, basicamente, a **mesma coisa**!
+Pois é, eu me enrolei! Mas isso for por que eles são, basicamente, a **mesma
+coisa**!
 
-A **única** diferença é que o `**` é bom para `dict`s, pois mantém as **palavras-chave**. Por exemplo, se tivermos uma função `dar_nota()` e tentarmos **encaminhar**
-argumentos para ela com `encaminhar()`:
+A **única** diferença é que o `**` é bom para `dict`s, pois mantém as
+**palavras-chave**. Por exemplo, se tivermos uma função `dar_nota()` e
+tentarmos **encaminhar** argumentos para ela com `encaminhar()`:
 
 ```python
 def dar_nota(aluno="", nota=0):
@@ -128,7 +136,7 @@ def encaminhar(*args):
     dar_nota(*args)
 ```
 
-Não conseguimos! Tipo, até dá, mas não totalmente. Segue o exemplo:
+Não conseguimos! Tipo, até dá, mas não totalmente. Olha isso:
 
 ```python
 >>> dar_nota("Eduardo", 2000)
@@ -149,8 +157,9 @@ Traceback (most recent call last):
 TypeError: encaminhar() got an unexpected keyword argument 'nota'
 ```
 
-Levamos um `TypeError` na cara, mas , felizmente, existe o `**kwargs` - que **preserva**
-o nome dos argumentos. Se redeclararmos `encaminhar()` usando este recurso, todos os problemas são **corrigidos**:
+Levamos um `TypeError` na cara, mas, felizmente, existe o `**kwargs` - que
+**preserva** o nome dos argumentos. Se redeclararmos `encaminhar()` usando este
+recurso, todos os problemas são **corrigidos**:
 
 ```python
 >>> def encaminhar(*args, **kwargs):
@@ -160,7 +169,7 @@ o nome dos argumentos. Se redeclararmos `encaminhar()` usando este recurso, todo
 A nota do Terroso Carlos foi 623
 ```
 
-E... é isso. Super simples - assim  como tudo em Python! 
+E... é isso. Super simples - assim como tudo em Python!
 
 Até semana que vem!
 
