@@ -96,7 +96,7 @@ int main(void) {
 ```
 
 println.c:
-```
+```c
 #include <stdio.h>
 
 // Print com fim de linha
