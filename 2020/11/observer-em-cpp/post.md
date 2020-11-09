@@ -1,8 +1,9 @@
 <!--
 Titulo: Observador em C++ - Design Patterns
 
-Subtitulo:
+Sugestão de Subtitulo:
   * Pare de perguntar tanto
+  * Se inscreva na newsletter para virar um Observador do nosso blog
 -->
 
 Olá e bem vindo ao primeiro post do blog sobre design patterns. Eles são
