@@ -6,29 +6,28 @@ Sugestão de Subtitulo:
   * Se inscreva na newsletter para virar um Observador do nosso blog
 -->
 
-Olá e bem vindo ao primeiro post do blog sobre design patterns. Eles são
-basicamente jeitos de organizar seu programa (designs) que são tão usados que
-viraram um padrão (pattern) que você aplica quando precisa resolver
-determinados tipos de problema. Por causa dessa caracteristica deles, o post
+Olá! Seja bem-vindo ao primeiro post do blog sobre ***design patterns***. Estes que são,
+basicamente, jeitos de **organizar** seu programa (*designs*) e que, por serem tão usados, acabaram virando um **padrão** (*pattern*) que se aplica quando é preciso **resolver**
+determinados problemas. Por causa dessa característica, o post
 vai ser estruturado começando com uma implementação ingênua para um problema e
-avançando para como o Design Pattern em questão pode ajudar a simplificar a
+avançando para como o *Design Pattern* em questão pode ajudar a simplificar a
 situação.
 
-No post de hoje vamos partir da premisa de que estamos modelando um aplicativo
-de chat aberto, teremos uma classe que representará uma sala e outra os
-usuários.
+Para isso, vamos partir da premissa de que estamos **modelando um aplicativo
+de chat aberto**. Teremos uma classe que representará uma **sala** e outra os
+**usuários**.
 
 ```cpp
 // Representa a sala de chat
 class Sala {};
 
-// Representa os Usuários
+// Representa os usuários
 class Usuario {};
 ```
 
-Se formos pensar o que a sala precisa seria algo como um histórico das
-mensagens até agora, um método para os usuários enviarem mais mensagens e outro
-para lerem o histórico.
+Se formos pensar listar aquilo que a sala precisa, alocamos: o **histórico das
+mensagens** até agora, um método para os usuários **enviarem mais mensagens** e outro
+para **lerem o histórico**.
 
 ```cpp
 #include <string>
@@ -54,12 +53,12 @@ public:
     }
 };
 
-// Representa os Usuários
+// Representa os usuários
 class Usuario {};
 
 ```
 
-Podemos testar essa implementação com um `main` básico.
+Podemos **testar** essa implementação com um `main` básico:
 
 ```cpp
 #include <string>
@@ -92,14 +91,14 @@ Tio CodeField: Bom dia, sobrinho querido.
 Tio CodeField: Como vão as namoradinha? he he he
 ```
 
-Vamos implementar agora o usuário, ele deverá ter um nome e uma refêrencia ao
-chat de qual participa (ou não, depende do sistema, mas no nosso caso cada
+Agora iremos **implementar o usuário**. Ele deverá ter um **nome** e uma **refêrencia ao
+chat** do qual participa (ou não, pois isso depende do sistema. Mas no nosso caso, cada
 usuário vai pertencer apenas à uma sala de chat)
 
 ```cpp
 // [...]
 
-// Representa os Usuários
+// Representa os usuários
 class Usuario {
     std::string _nome;
     Sala& _sala;
@@ -115,7 +114,7 @@ public:
 // [...]
 ```
 
-Vamos alterar o main para testar
+Vamos alterar o main para **testar**:
 
 ```cpp
 // [...]
@@ -139,7 +138,7 @@ int main() {
 }
 ```
 
-O resultado deve ser igual a antes
+O resultado **deve ser igual a antes**:
 
 ```cpp
 $ g++ main.cpp && ./a.out
@@ -148,37 +147,39 @@ Tio. CodeField: Bom dia, sobrinho querido.
 Tio. CodeField: Como vão as namoradinha? he he he
 ```
 
-Mas aí você me pergunta: esse é um tutorial de Design Patterns, então qual é o
-problema com essa implementação?
+Mas aí você me pergunta:
 
-Então, em um chat de verdade o ideal é que ele exiba a mensagem logo que foi
-enviada, não depois de tudo igual estamos fazendo.
+*Esse é um tutorial de *Design Patterns*, então qual é o
+problema com essa implementação?*
 
-> Ahh, mas é só colocar o `std::cout` dentro do `Sala::enviar_mensagem` e resolvido
+Aí que está: em um chat de verdade, o ideal é que ele **exiba a mensagem** logo que foi
+enviada, não depois - igual ao que estamos fazendo.
 
-Hmm, pro nosso caso especifíco funcionaria, mas imagine que em um serviço real
-essa classe `Sala` provavelmente estaria em um servidor, então nem se a gente
-quisesse teria como exibir a mensagem, isso teria que ser feito de alguma forma
-no computador/celular de cada usuário. Também tem isso: o usuário pode estar
-usando um computador ou um celular ou um tablet, o que implica jeitos
-diferentes de mostrar as mensagens. Então realmente não dá pra colocar a
+> "Ahh, mas é só colocar o `std::cout` dentro do `Sala::enviar_mensagem` e resolvido".
+
+Hmm, para o nosso caso **especifíco** funcionaria, mas imagine que em um **serviço real**
+essa classe `Sala`, provavelmente, estaria em um servidor. Portanto nem se a gente
+quisesse teria como exibir a mensagem. Isso teria que ser feito de alguma forma
+no computador/celular de cada usuário. Além disso, o usuário pode estar
+usando um computador, celular ou tablet, o que implica **jeitos
+diferentes** de mostrar as mensagens. Então realmente não dá pra colocar a
 exibição das mensagens como responsabilidade da `Sala`.
 
-Na verdade mesmo, no mundo real isso seria provavelmente responsabilidade de
-alguma classe no front-end. Um jeito aproximado de simular isso é colocar essa
+Na verdade, no mundo real isso seria, muito provavelmente, uma responsabilidade de
+alguma classe no *front-end*. Um jeito aproximado de **simular** isso é colocar essa
 funcionalidade no `Usuario`.
 
-Mas como ele vai saber quando chegou uma mensagem nova? O jeito mais básico é
-perguntar para a sala.
+*Mas como ele vai saber quando chegou uma mensagem nova?*
 
-Vamos então adicionar um parametro ao construtor de uma `std::ostream` que vai
-ser a "interface" que o usuário vai estar usando e implementar uma função
+O jeito mais simples é **perguntar para a sala**!
+
+Vamos, então, adicionar um **parâmetro ao construtor** de uma `std::ostream` - que irá **implementar** uma função e será a "interface"  do usuário.
 `Usuario::mostrar_novas_mensagens`.
 
 ```cpp
 // [...]
 
-// Representa os Usuários
+// Representa os usuários
 class Usuario {
     const std::ostream& _interface;
     std::string _nome;
@@ -208,11 +209,10 @@ public:
 // [...]
 ```
 
-Tá, tá um pouquinho melhor porque tá mais encapsulado, cada usuário pode lidar
-com as mensagens do jeito que achar melhor. Mas agora vamos ter que ficar
-chamando essa função para atualizar o chat. Vamos testar isso fazendo ela
-atualizar o chat a cada segundo e vamos fazer as mensagens demorar um pouco
-mais para aparecer.
+Certo! Ficou um pouquinho melhor, porque está mais encapsulado e cada usuário pode lidar
+com as mensagens do jeito que **achar melhor**. Mas agora vamos ter que ficar
+**"chamando"** essa função para **atualizar** o chat. Testaremos isso da seguinte forma: faremos ela
+atualizar o chat **a cada segundo** e iremos **atrasar** as mensagens.
 
 ```cpp
 #include <future>
@@ -250,18 +250,18 @@ int main() {
 }
 ```
 
-Olha, antes de continuar quero deixar claro uma coisa: nunca, nunca, nunca,
-nunca escreva código como esse. Isso só funciona porque os tempos de espera são
-exatamente alternados (se você mudar o *esperar meio segundo* por um segundo
-provavelmente vai estragar tudo). Na vida real você deve usar alguma forma de
-sincronização (como uma `std::mutex`) entre os threads para acessar memória
+Olha, antes de continuar, gostaria de deixar claro uma coisa: nunca, nunca, nunca,
+nunca escreva um código como esse. Isso só funciona porque os tempos de espera são
+**exatamente alternados** (se você mudar o *esperar meio segundo* por um segundo,
+provavelmente vai estragar tudo). Na vida real, por sua vez, você deve usar alguma forma de
+**sincronização** (como uma `std::mutex`) entre os *threads* para acessar memória
 compartilhada. O único motivo pelo qual optei deixar assim é mostrar a
-complexidade e risco que pode aparecer se você não analisar cuidadosamente o
-problema que você está enfrentando - inclusive considerar se um design pattern
+**complexidade** e **risco** que pode aparecer caso não analise **cuidadosamente** o
+problema que está enfrentando - inclusive, considerar se um *design pattern*
 ou uma mudança arquitetural não podem simplificar grandiosamente a solução.
 
-Mas então, se rodarmos o programa (agora precisamos linkar com `pthread`) vamos
-ver que está funcionando.
+Mas, então, se rodarmos o programa (agora precisamos linkar com `pthread`), vamos
+notar que está funcionando:
 
 ```bash
 $ g++ main.cpp -pthread && ./a.out
@@ -270,33 +270,29 @@ Tio. CodeField: Bom dia, sobrinho querido.
 Tio. CodeField: Como vão as namoradinha? he he he
 ```
 
-Então qual o problema com essa solução (além da falta de sincronização)?
+*Então qual o problema com essa solução (além da falta de **sincronização**)?*
 
-Temos que ficar constantemente checando novas mensagens no caso a cada segundo,
-mas se quisessemos algo instântaneo teriamos que diminuir esse intervalo de
-checagem - o que aumentaria drasticamente o consumo de CPU e bateria.
+A resposta é simples: temos que ficar constantemente **checando novas mensagens** - no caso, a cada segundo. Porém se quiséssemos algo instântaneo, teríamos que **diminuir** esse **intervalo de checagem** - o que aumentaria drasticamente o consumo de *CPU* e bateria.
 
-Mas podemos fazer melhor do que isso: e se ao invés de checarmos por mensagens
-novas, a sala pudesse avisar os usuários quando ela chegassem? Assim além de
-não precisarmos checar (o que diminuiria o consumo de bateria e a complexidade
-da implementação) vamos poder ler as mensagens muito mais rápido.
+Mas podemos fazer melhor do que isso: e se, ao invés de checarmos por novas mensagens, a sala pudesse **avisar** os usuários quando elas chegassem? Desse modo, além de
+**não precisarmos checar** (o que diminuiria o consumo de bateria e a complexidade
+da implementação), vamos poder **ler** as mensagens **muito mais rápido**.
 
-É exatamente isso que o Design Pattern do Observador permite! E ainda de uma
-forma que a Sala não tem nenhuma dependência nos Usuarios conectados.
+É exatamente isso que o *Design Pattern* do Observador nos permite fazer! E ainda de forma que a Sala não tenha **nenhuma** dependência nos usuários conectados.
 
-A ideia básica é que alguns objetos (como a Sala) são interessantes
-principalmente quando sofrem alguma alteração, por isso eles devem poder ser
+A ideia é que alguns objetos (como a Sala) são interessantes,
+principalmente quando sofrem alguma alteração; por isso, eles podem ser
 *Observáveis*. Enquanto isso, outros objetos se interessam por essas mudanças
-(os Usuários), então devem ser *Observadores*. Assim se forma uma relação de
-que deve ser possível para os Observadores serem cadastrados nos Observáveis
-para serem notificados de tais mudanças.
+(os usuários), então devem ser *Observadores*. Assim se forma uma relação de
+que deve ser possível para os Observadores serem **cadastrados** nos Observáveis
+para serem **notificados** de tais mudanças.
 
-Um jeito possível de implementar isso seria adicionar essa capacidade de
-notificar os usuários diretamente na sala, mas isso adicionaria uma dependência
-desnecessária da Sala no Usuário o que dificultaria futuras alterações no
-programa. O jeito mais adequado de implementar é com uma classe abstrata
-*Observavel* (ou *Sujeito*) e uma interface *Observador*. As interfaces devem
-ser mais ou menos assim:
+Um jeito possível de realizar a implementação é adicionar essa **capacidade de
+notificar** os usuários **diretamente na sala** - porém isso criaria uma dependência
+desnecessária da Sala no usuário, o que iria dificultar futuras alterações no
+programa. O jeito mais adequado de implementar é com uma ***classe abstrata
+Observável*** (ou *Sujeito*) e uma ***interface Observador***. As interfaces devem
+ser da seguinte forma:
 
 
 ```cpp
@@ -320,11 +316,11 @@ public:
 // [...]
 ```
 
-Dai o Usuário pode herdar *Observador* e implementar um *atualizar()* que exiba
-as novas mensagens. E a *Sala* deve herdar do *Observavel* e chamar notificar
+Então o usuário pode herdar *Observador* e **implementar** um *atualizar()* que exiba
+as novas mensagens. A *Sala*, por sua vez, deve herdar do *Observável* e notificar
 toda vez que receber uma nova mensagem.
 
-Vamos implementar o Observavel antes de continuar.
+Vamos implementar o Observável antes de continuar:
 
 ```cpp
 // [...]
@@ -345,7 +341,7 @@ public:
 // [...]
 ```
 
-Agora podemos fazer as mudanças que falamos.
+Agora podemos fazer as mudanças:
 
 
 ```cpp
@@ -404,7 +400,7 @@ public:
 // [...]
 ```
 
-Agora podemos tirar o loop de atualizar asyncrono do `main()`
+O próximo passo é tirar o *loop* de atualizar asyncrono do `main()`
 
 ```cpp
 int main() {
@@ -438,11 +434,19 @@ Tio. CodeField: Bom dia, sobrinho querido.
 Tio. CodeField: Como vão as namoradinha? he he he
 ```
 
-E tudo certinho! cada mensagem aparece quando é enviada, sem precisarmos fazer
-nada estranho e perigoso.
+E tudo certinho! Cada mensagem **aparece quando é enviada**, sem precisarmos fazer
+nada.
 
-Então muito obrigado por ler, se tiver gostado de aprender sobre o Design
-Pattern do Observador deixe uma classificação boa e se inscreva na nossa
-newsletter para não perder o próximo que vamos abordar.
+Muito obrigado por chegar até aqui! Se tiver gostado de aprender sobre o *Design
+Pattern* do Observador, deixe uma boa classificação e se inscreva na nossa
+*newsletter* para não perder o próximo tema que vamos abordar!
 
+---
 
+Gostou de aprender sobre isso? Quer aprender mais? Se inscreva na nossa [newsletter](https://moskoscode.com/newsletter) e nos siga nas nossas [redes sociais](https://linktr.ee/moskoscode) para não perder novos posts como esse!
+
+Se gostou, compartilhe! E até mais ;)
+
+[Instagram](https://www.instagram.com/moskoscode)
+[Facebook](https://www.facebook.com/moskoscode)
+[Twitter](https://www.twitter.com/moskoscode)
