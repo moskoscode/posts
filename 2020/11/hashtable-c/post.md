@@ -1,32 +1,42 @@
-Uma HashTable é uma estrutura de dados que permite **associar chaves a valores**.
-Por exemplo: ao invés de acessar os items através das **posições** nas quais eles
-foram guardados, você pode **dar nomes** a eles! Hoje vamos explorar uma
-implementação básica desse conceito na linguagem de programação ubíqua: **C**.
+Uma HashTable é uma estrutura de dados que permite **associar chaves a
+valores**.  Por exemplo: ao invés de acessar os items através das **posições**
+nas quais eles foram guardados, você pode **dar nomes** a eles! Hoje vamos
+explorar uma implementação básica desse conceito na linguagem de programação
+ubíqua: **C**.
 
-Nesses casos, a principal vantagem da hashtable sobre um *array* simples no qual
-você procura a chave é, além da conveniência, a **complexidade
-algorítmica** (que é uma medida de o quão demorado fica com base na quantidade
-de items guardados). Enquanto o *array* não ordenado tem complexidade de procura
-`O(n)`, que significa que achar um item em um *array* com `n` itens é `n` vezes
-**mais demorado** que em um *array* com apenas **um** item. Já a HashTable tem
-**complexidade média** de `O(1)` (para uma boa '*hash*' e *buckets* suficientes), o que
-significa que, **independente do número de itens**, o tempo para achar um deles é **o
-mesmo**. Na prática, isso permite que sejam guardadas milhões de informações sem
-degradação significativa na performance.
+Nesses casos, a principal vantagem da hashtable sobre um *array* simples no
+qual você procura a chave é, além da conveniência, a **complexidade
+algorítmica** (que é uma medida de o quão demorada uma operação é com base na
+quantidade de items que ela envolve). Enquanto o *array* (não ordenado) tem
+complexidade de procura `O(n)`, que significa que achar um item em um *array*
+com `n` itens é `n` vezes **mais demorado** que em um *array* com apenas **um**
+item, a HashTable tem **complexidade média** de `O(1)` (para uma boa '*hash*' e
+*buckets* suficientes), o que significa que, **independentemente do número de
+itens**, o tempo para achar um deles é **o mesmo**. Na prática, isso permite
+que sejam guardadas milhões de informações sem degradação significativa na
+performance.
 
-Este tipo de estrutura poderia ser usado, por exemplo, no **sistema** de um
-zoológico. Associar os animais aos alimentos que devem receber. Ou ainda
+Este tipo de estrutura poderia ser usada, por exemplo, no **sistema** de um
+zoológico, para associar os animais aos alimentos que devem receber. Ou ainda
 associar os nomes das comidas à quantidade em estoque de cada uma delas. São
 exatamente esses exemplos que vamos **implementar** hoje.
 
-Uma HashTable é composta basicamente de uma **função de *hash*** (que computa um
-valor para cada chave)** e um ***array* de listas ligadas** (existem outras estruturas
-possíveis). O funcionamento dela é usar a função de *hash* para **computar** um
-índice no *array* para guardar um par de `chave + valor` e o coloca no **fim da
-lista** linkada dessa posição para lidar com possíveis **colisões** de *hash* - quando
-duas chaves diferentes tem a mesma hash. Já, para fazer a procura de um **item inserido**, a *hash* é computada e se procura na lista **correspondente**.
+Uma HashTable é composta basicamente de uma **função de *hash*** (que computa
+um valor para cada chave)** e um ***array* de listas ligadas** (existem outras
+estruturas possíveis).
 
-Vamos começar criando uma `struct` para **armazenar** nossa função de *hash* e *array*.
+O funcionamento da inserção de um par `chave + valor` é aplicar a função de
+*hash* à chave para **computar** um índice no *array*, cuja lista ligada
+correspondente terá o par adicionado ao seu **final**. Tais listas são usadas
+para contornar possíveis **colisões** de *hash* - quando duas chaves diferentes
+tem a mesma hash.
+
+Já para fazer a procura por **item inserido** é necessária a chave usada para
+armazena-lo, a *hash* dela é computada e ela é procurada na lista
+**correspondente**.
+
+Então vamos pular na implementação: primeiro criamos uma `struct` para
+**armazenar** nossa função de *hash* e o *array*.
 
 ```c
 #include <stddef.h>
@@ -52,7 +62,7 @@ typedef struct Par {
     void* valor;     // Valor
     size_t valor_n;  // Tamanho do valor
 
-    struct Par* próximo;  // Próximo par da lista
+    struct Par* proximo;  // Próximo par da lista
 } Par;
 
 typedef struct HashTable {
@@ -61,9 +71,9 @@ typedef struct HashTable {
 } HashTable;
 ```
 
-Podemos definir uma função de *hash* simples, porém lerda, somando todos os `void*`
-até `n` e dividindo o resto por `TAMANHO` - que nos dá uma posição no
-*array* de pares.
+Podemos definir uma função de *hash* simples, porém lerda, somando todos os
+`void*` até `n` e pegando o resto da divisão por `TAMANHO` - o que vai resultar
+em uma posição válida no *array* de pares.
 
 ```c
 // [...] O resto do código até agora está aqui em cima
@@ -79,7 +89,10 @@ size_t hash_simples(void* dados, size_t n) {
 
 ```
 
-O principal jeito de indicar o fim de uma lista ligada é com um `NULL`. Porém, em C, novas *structs* e *arrays* tem valor **indefinido** (vem com lixo, basicamente). Por isso precisamos de uma função que faça a **limpeza** da nossa HashTable antes de podermos usá-la.
+O jeito mais usado de indicar o fim de uma lista ligada é com um `NULL`. Porém,
+em C, novas *structs* e *arrays* tem valor **indefinido** (vem com lixo,
+basicamente). Por isso precisamos de uma função que faça a **limpeza** da nossa
+HashTable antes de podermos usá-la.
 
 ```c
 // [...]
@@ -87,7 +100,7 @@ O principal jeito de indicar o fim de uma lista ligada é com um `NULL`. Porém,
 // Limpa a HashTable
 void HashTable_init(HashTable* table) {
     for (size_t i = 0; i < TAMANHO; ++i) {
-        table->pares[i] = NULL;
+        table->pares[i] = NULL;   // Define todos os pares como NULL, indicando que nenhum foi criado
     }
 
     table->hash = hash_simples;  // Define nossa hash_simples como padrão
@@ -96,9 +109,9 @@ void HashTable_init(HashTable* table) {
 ```
 
 Agora podemos criar uma função que **adicione** itens à HashTable - daquele
-jeito que comentei antes: primeiro, **computa a *hash*** da chave. Após isso, **procure a posição
-certa** na lista ligada - ou substitui o par **antigo** se a chave já tiver sido
-adicionada. E, por último, é só **adicionar o par**.
+jeito que comentei antes: primeiro, deve-se **computar a hash** da chave. Após
+isso, **procurar a posição certa** na lista ligada. E, por último, **adicionar
+um novo par** ou **substituir o par existente**.
 
 ```c
 // [...]
@@ -115,7 +128,7 @@ void HashTable_colocar(HashTable* table, const void* chave, size_t chave_n, cons
             || (*par)->chave_n != chave_n                 // Ou o tamanho da chave for diferente
             || memcmp((*par)->chave, chave, chave_n) != 0 // Ou a chave for diferente
             ) {
-        par = &(*par)->próximo;  // Avance para o próximo par
+        par = &(*par)->proximo;  // Avance para o próximo par
     }
 
     // 3- Adiciona/Substitui par
@@ -146,9 +159,10 @@ void HashTable_colocar(HashTable* table, const void* chave, size_t chave_n, cons
 
 ```
 
-Antes de podermos usar, só precisamos de uma função para **ler o valor** guardado. É
-um tanto parecida com a anterior e precisa de: **computar** a *Hash*. Então **achar o
-par certo** e, por último, por meio dos parâmetros, **retornar** o `valor` e `valor_n`.
+Antes de podermos usar, só precisamos de uma função para **ler o valor**
+guardado. Ela é um tanto parecida com a anterior: **computar** a
+*Hash*. Então **achar o par certo** e, por último, por meio dos parâmetros de retorno,
+**retornar** o `valor` e `valor_n`.
 
 ```c
 // [...]
@@ -165,7 +179,7 @@ int HashTable_ler(HashTable* table, const void* chave, size_t chave_n, void** va
             || par->chave_n != chave_n                 // Ou o tamanho da chave for diferente
             || memcmp(par->chave, chave, chave_n) != 0 // Ou a chave for diferente
             ) {
-        par = par->próximo;  // Avance para o próximo par
+        par = par->proximo;  // Avance para o próximo par
     }
 
     // 3- Copia o valor para as variáveis de retorno
@@ -237,15 +251,16 @@ int main() {
 Você pode substituir o valor de `animal` para ver como as tabelas se comportam
 com os outros animais (ou com animais inexistentes).
 
-E sim, eu sei que a sintaxe não é das melhores, mas isso é por que estamos
-usando **C** e sendo genéricos quanto ao tipo de chave/valor. Se fizéssemos uma
-**tabela**, por exemplo, especificamente com chaves e valores `char*`, poderíamos
-**omitir** o tamanho da *string*, visto que iríamos assumir que ela terminaria em
-`'\0'`. Mas esse é um preço que se paga em escolher entre generalidade X usabilidade.
+E sim, eu sei que a sintaxe não é das mais amigáveis, mas isso é por que
+estamos usando **C** e sendo genéricos quanto ao tipo de chave/valor. Se
+fizéssemos uma **tabela** especificamente com chaves e valores `char*`,
+poderíamos **omitir** o tamanho da *string*, visto que iríamos assumir que ela
+terminaria em `'\0'`. Mas sempre vamos ter essa dicotomia de generalidade vs
+usabilidade e fazer a escolha que seja mais adequada para cada caso.
 
 Espero que você tenha gostado e entendido nossa implementação! Qualquer dúvida
-nos envie um e-mail ou deixe um comentário que tentarei responder o mais breve
-possível. Até semana que vêm!
+nos envie um e-mail ou deixe um comentário que tentarei responder o mais
+brevemente possível. Até semana que vem!
 
 ---
 
