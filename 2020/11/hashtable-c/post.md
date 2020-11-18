@@ -256,7 +256,7 @@ estamos usando **C** e sendo genéricos quanto ao tipo de chave/valor. Se
 fizéssemos uma **tabela** especificamente com chaves e valores `char*`,
 poderíamos **omitir** o tamanho da *string*, visto que iríamos assumir que ela
 terminaria em `'\0'`. Mas sempre vamos ter essa dicotomia de generalidade vs
-usabilidade e fazer a escolha que seja mais adequada para cada caso.
+usabilidade e devemos fazer a escolha que pareca mais adequada em cada caso.
 
 Espero que você tenha gostado e entendido nossa implementação! Qualquer dúvida
 nos envie um e-mail ou deixe um comentário que tentarei responder o mais
