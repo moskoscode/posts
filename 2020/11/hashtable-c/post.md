@@ -1,33 +1,32 @@
-Uma HashTable é uma estrutura de dados que permite associar chaves à valores.
-Por exemplo: ao invés de acessar os items através das posições nas quais eles
-foram guardados, você pode dar nomes à eles! Hoje vamos explorar uma
-implementação básica desse conceito na linguagem de programação ubíqua: C.
+Uma HashTable é uma estrutura de dados que permite **associar chaves a valores**.
+Por exemplo: ao invés de acessar os items através das **posições** nas quais eles
+foram guardados, você pode **dar nomes** a eles! Hoje vamos explorar uma
+implementação básica desse conceito na linguagem de programação ubíqua: **C**.
 
-A principal vantagem da hashtable nesses casos sobre um array simples no qual
-você procura a chave que você quer (além da conveniência) é a *complexidade
-algoritimica* (que é uma medida de o quão demorado fica com base na quantidade
-de items guardados). Enquanto o array não ordenado tem complexidade de procura
-`O(n)`, que significa que achar um item em um array com `n` itens é `n` vezes
-mais demorado que em um array com apenas 1 item. Já a HashTable tem
-complexidade média de `O(1)` (para uma boa hash e suficientes *buckets*), o que
-significa que, idependente do número de itens, o tempo para achar um deles é o
-mesmo. Na pratica isso permite que sejam guardadas milhões de informações sem
+Nesses casos, a principal vantagem da hashtable sobre um *array* simples no qual
+você procura a chave é, além da conveniência, a **complexidade
+algorítmica** (que é uma medida de o quão demorado fica com base na quantidade
+de items guardados). Enquanto o *array* não ordenado tem complexidade de procura
+`O(n)`, que significa que achar um item em um *array* com `n` itens é `n` vezes
+**mais demorado** que em um *array* com apenas **um** item. Já a HashTable tem
+**complexidade média** de `O(1)` (para uma boa '*hash*' e *buckets* suficientes), o que
+significa que, **independente do número de itens**, o tempo para achar um deles é **o
+mesmo**. Na prática, isso permite que sejam guardadas milhões de informações sem
 degradação significativa na performance.
 
-Poderiamos usar esse tipo de estrutura para, por exemplo, no sistema de um
-zoológico, associar os animais às comidas que eles devem receber. Ou ainda
+Este tipo de estrutura poderia ser usado, por exemplo, no **sistema** de um
+zoológico. Associar os animais aos alimentos que devem receber. Ou ainda
 associar os nomes das comidas à quantidade em estoque de cada uma delas. São
-exatamente esses exemplos que vamos implementar hoje.
+exatamente esses exemplos que vamos **implementar** hoje.
 
-Uma HashTable é composta básicamente de uma função de hash (que computa um
-valor para cada chave) e um array de listas ligadas (existem outras estruturas
-possíveis). O funcionamento dela é usar a função de hash para computar um
-indice no array para guardar um par de `chave + valor` e o coloca no fim da
-lista linkada dessa posição para lidar com possíveis colisões de hash (quando
-duas chaves diferentes tem a mesma hash). Já para fazer a procura de um item já
-inserido, a hash é computada e se procura na lista correspondente.
+Uma HashTable é composta basicamente de uma **função de *hash*** (que computa um
+valor para cada chave)** e um ***array* de listas ligadas** (existem outras estruturas
+possíveis). O funcionamento dela é usar a função de *hash* para **computar** um
+índice no *array* para guardar um par de `chave + valor` e o coloca no **fim da
+lista** linkada dessa posição para lidar com possíveis **colisões** de *hash* - quando
+duas chaves diferentes tem a mesma hash. Já, para fazer a procura de um **item inserido**, a *hash* é computada e se procura na lista **correspondente**.
 
-Vamos começar criando uma `struct` para armazenar nossa função de hash e array.
+Vamos começar criando uma `struct` para **armazenar** nossa função de *hash* e *array*.
 
 ```c
 #include <stddef.h>
@@ -53,7 +52,7 @@ typedef struct Par {
     void* valor;     // Valor
     size_t valor_n;  // Tamanho do valor
 
-    struct Par* proximo;  // Proxímo par da lista
+    struct Par* próximo;  // Próximo par da lista
 } Par;
 
 typedef struct HashTable {
@@ -62,9 +61,9 @@ typedef struct HashTable {
 } HashTable;
 ```
 
-Podemos definir uma função de hash simples (mas lerda) somando todos os `void*`
-até `n` e pegando o resto pela divisão por `TAMANHO` (que nos dá uma posição no
-array de pares).
+Podemos definir uma função de *hash* simples, porém lerda, somando todos os `void*`
+até `n` e dividindo o resto por `TAMANHO` - que nos dá uma posição no
+*array* de pares.
 
 ```c
 // [...] O resto do código até agora está aqui em cima
@@ -80,10 +79,7 @@ size_t hash_simples(void* dados, size_t n) {
 
 ```
 
-O jeito canônico de indicar o fim de uma lista ligada é com um `NULL`, só que
-em C novas structs e arrays tem valor indefinido (vem com lixo, basicamente),
-por isso precisamos de uma função que faça a limpeza da nossa HashTable antes
-de podermos usa-la
+O principal jeito de indicar o fim de uma lista ligada é com um `NULL`. Porém, em C, novas *structs* e *arrays* tem valor **indefinido** (vem com lixo, basicamente). Por isso precisamos de uma função que faça a **limpeza** da nossa HashTable antes de podermos usá-la.
 
 ```c
 // [...]
@@ -99,10 +95,10 @@ void HashTable_init(HashTable* table) {
 
 ```
 
-Então agora podemos criar uma função que adicione itens à HashTable, daquele
-jeito que comentei antes: 1- Computa a hash da chave, 2- Procura a posição
-certa na lista ligada (o fim, ou substitui o par antigo se a chave já tiver sido
-adicionada) e 3- Adiciona o Par.
+Agora podemos criar uma função que **adicione** itens à HashTable - daquele
+jeito que comentei antes: primeiro, **computa a *hash*** da chave. Após isso, **procure a posição
+certa** na lista ligada - ou substitui o par **antigo** se a chave já tiver sido
+adicionada. E, por último, é só **adicionar o par**.
 
 ```c
 // [...]
@@ -119,16 +115,16 @@ void HashTable_colocar(HashTable* table, const void* chave, size_t chave_n, cons
             || (*par)->chave_n != chave_n                 // Ou o tamanho da chave for diferente
             || memcmp((*par)->chave, chave, chave_n) != 0 // Ou a chave for diferente
             ) {
-        par = &(*par)->proximo;  // Avançe para o proximo par
+        par = &(*par)->próximo;  // Avance para o próximo par
     }
 
     // 3- Adiciona/Substitui par
 
     // Se precisamos adicionar um novo par
     if (*par == NULL) {
-        *par = malloc(sizeof(Par));  // Aloca memoria para um novo par
+        *par = malloc(sizeof(Par));  // Aloca memória para um novo par
 
-        (*par)->chave = malloc( chave_n );  // Aloca memoria para a chave
+        (*par)->chave = malloc( chave_n );  // Aloca memória para a chave
         (*par)->chave_n = chave_n;
 
         (*par)->valor   = NULL;
@@ -141,18 +137,18 @@ void HashTable_colocar(HashTable* table, const void* chave, size_t chave_n, cons
         memcpy((*par)->chave, chave, chave_n);
     }
 
-    // Libera a memoria do valor anterior (nada acontece se for NULL)
+    // Libera a memória do valor anterior (nada acontece se for NULL)
     free( (*par)->valor );
 
-    (*par)->valor = malloc( valor_n );      // Aloca memoria para o valor
+    (*par)->valor = malloc( valor_n );      // Aloca memória para o valor
     memcpy((*par)->valor, valor, valor_n);  // Copia o valor
 }
 
 ```
 
-E antes de poder usar só precisamos de uma função para ler o valor guardado, é
-um tanto parecida com a anterior, ela precisa: 1- Computar a Hash, 2- Achar o
-par certo e 3- Retornar o `valor` e `valor_n` (por meio dos parametros de retorno)
+Antes de podermos usar, só precisamos de uma função para **ler o valor** guardado. É
+um tanto parecida com a anterior e precisa de: **computar** a *Hash*. Então **achar o
+par certo** e, por último, por meio dos parâmetros, **retornar** o `valor` e `valor_n`.
 
 ```c
 // [...]
@@ -169,10 +165,10 @@ int HashTable_ler(HashTable* table, const void* chave, size_t chave_n, void** va
             || par->chave_n != chave_n                 // Ou o tamanho da chave for diferente
             || memcmp(par->chave, chave, chave_n) != 0 // Ou a chave for diferente
             ) {
-        par = par->proximo;  // Avançe para o proximo par
+        par = par->próximo;  // Avance para o próximo par
     }
 
-    // 3- Copia o valor para as variaveis de retorno
+    // 3- Copia o valor para as variáveis de retorno
 
     if (par == NULL)
         return 0;  // Chave não existe
@@ -185,7 +181,7 @@ int HashTable_ler(HashTable* table, const void* chave, size_t chave_n, void** va
 
 ```
 
-Então agora podemos implementar nosso pseudo zoológico:
+A partir disso, podemos implementar nosso "pseudo zoológico":
 
 ```c
 int main() {
@@ -207,10 +203,10 @@ int main() {
 
     const char* g = "girafa";
     const char* a = "arvores altas";
-    HashTable_colocar(&anim_com, g, strlen(g)+1, a, strlen(a)+1);    // Girafa come arvores altas
+    HashTable_colocar(&anim_com, g, strlen(g)+1, a, strlen(a)+1);    // Girafa come árvores altas
 
     size_t a_q = 3;
-    HashTable_colocar(&com_qt, a, strlen(a)+1, &a_q, sizeof(size_t));     // 3 Árvores altas
+    HashTable_colocar(&com_qt, a, strlen(a)+1, &a_q, sizeof(size_t));     // 3 árvores altas
 
     const char* c = "carro";
     const char* ga = "gasolina";
@@ -242,12 +238,21 @@ Você pode substituir o valor de `animal` para ver como as tabelas se comportam
 com os outros animais (ou com animais inexistentes).
 
 E sim, eu sei que a sintaxe não é das melhores, mas isso é por que estamos
-usando C e sendo genéricos quanto ao tipo de chave/valor. Se fizessemos uma
-tabela, por exemplo, especificamente com chaves e valores `char*`, poderiamos
-omitir o tamanho da string já que poderiamos assumir que ela terminaria em
-`'\0'`. Mas esse é um preço que se paga entre generalidade X usabilidade.
+usando **C** e sendo genéricos quanto ao tipo de chave/valor. Se fizéssemos uma
+**tabela**, por exemplo, especificamente com chaves e valores `char*`, poderíamos
+**omitir** o tamanho da *string*, visto que iríamos assumir que ela terminaria em
+`'\0'`. Mas esse é um preço que se paga em escolher entre generalidade X usabilidade.
 
-Espero que você tenha gostado e entendido nossa implementação, qualquer dúvida
-nos mande um email ou deixe um comentário que tentarei responder o mais breve
-possíve o mais breve possível. Até semana que vêm.
+Espero que você tenha gostado e entendido nossa implementação! Qualquer dúvida
+nos envie um e-mail ou deixe um comentário que tentarei responder o mais breve
+possível. Até semana que vêm!
 
+---
+
+Gostou de aprender sobre isso? Quer aprender mais? Se inscreva na nossa [newsletter](https://moskoscode.com/newsletter) e nos siga nas nossas [redes sociais](https://linktr.ee/moskoscode) para não perder novos posts como esse!
+
+Se gostou, compartilhe! E até amanhã ;)
+
+[Instagram](https://www.instagram.com/moskoscode)
+[Facebook](https://www.facebook.com/moskoscode)
+[Twitter](https://www.twitter.com/moskoscode)
