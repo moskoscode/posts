@@ -33,7 +33,7 @@ dados de um cliente.
     "cliente": "Super Max Eletro CO.",
     "endereço": {
         "rua": "Rua São Carlos",
-        "bairo": "Guarapé",
+        "bairro": "Guarapé",
         "complemento": null,
         "CEP": 34254890
     },
@@ -42,11 +42,11 @@ dados de um cliente.
     "compras": [
         {
             "valor": 34.23,
-            "data": "20/03/2020"
+            "data": "03/07/2020"
         },
         {
             "valor": 11.99,
-            "data": "20/03/2020"
+            "data": "17/04/2020"
         },
         {
             "valor": 105.87,
@@ -58,13 +58,13 @@ dados de um cliente.
 
 Algumas das grandes vantagens em usar esse formato para armazenar suas
 informações ao invés de algo como o que foi apresentado no nosso post sobre
-como [trabalhar com arquivos em
+[trabalhar com arquivos em
 c++](https://moskoscode.com/trabalhando-com-arquivos-em-c/) são:
  - Portabilidade: Os arquivos podem ser lidos a partir de várias linguagens de
-   programação de uma maneira mais fácil.
+   programação de uma maneira fácil.
  - Retrocompatibilidade: Como os valores são acessados por chaves, uma futura
    reorganização dos dados ou adição de mais valores é improvável de quebrar um
-   versão anterior do programa
+   versão anterior do programa.
  - Facilidade. É muito mais simples de usar uma biblioteca de JSON do que
    *fstream*s (para esse propósito)
 
@@ -75,5 +75,261 @@ da [biblioteca de header
 [aqui](https://raw.githubusercontent.com/nlohmann/json/master/single_include/nlohmann/json.hpp)
 para a versão estável mais recente.
 
+Vamos ver como ficaria o exemplo do cliente se fossemos criá-lo a partir do C++
 
+```cpp
+#include <iostream>
+
+#include "json.hpp"  // Inclui a biblioteca
+
+int main() {
+    using json = nlohmann::json;  // Atalho para o tipo
+
+    // Cria um json, pode ser uma lista, objeto, número...
+    json cliente;
+
+    // Adiciona o nome do cliente, a biblioteca percebe que é uma string sozinha
+    cliente["cliente"] = "Super Max Eletro CO.";
+
+    // Adiciona o endereço, podemos criar objetos bem complexos com listas de inicialização
+    cliente["endereço"] = {
+        {"rua",  "Rua São Carlos"},
+        {"bairro",  "Guarapé"},
+        {"complemento", nullptr},
+        {"CEP", 34254890}
+    };
+
+    // bools e doubles também são convertidos automaticamente
+    cliente["temEntradaCaminhao"] = false;
+    cliente["crédito"] = 20.53;
+
+    // Também é possível escrever uma lista diretamente
+    cliente["compras"] = {
+        {
+            {"valor", 34.23},
+            {"data", "03/07/2020"}
+        },
+        {
+            {"valor", 11.99},
+            {"data", "17/04/2020"}
+        },
+        {
+            {"valor", 105.87},
+            {"data", "20/03/2020"}
+        }
+    };
+
+    // Imprime o objeto com identação de 4 espaços
+    std::cout << cliente.dump(4) << std::endl;
+}
+```
+
+Como pode ver é super simples, vamos ver se funcionou:
+
+```bash
+$ g++ main.cpp
+$ ./a.out
+{
+    "cliente": "Super Max Eletro CO.",
+    "compras": [
+        {
+            "data": "03/07/2020",
+            "valor": 34.23
+        },
+        {
+            "data": "17/04/2020",
+            "valor": 11.99
+        },
+        {
+            "data": "20/03/2020",
+            "valor": 105.87
+        }
+    ],
+    "crédito": 20.53,
+    "endereço": {
+        "CEP": 34254890,
+        "bairro": "Guarapé",
+        "complemento": null,
+        "rua": "Rua São Carlos"
+    },
+    "temEntradaCaminhao": false
+}
+```
+
+Certinho, a ordem está diferente, mas JSON não se importa com ela (só em
+listas).
+
+Mas a biblioteca faz mais do que isso, ela também é capaz de ler arquivos e
+escreve-los com facilidade. Vamos ver como é isso em um exemplo final e mais
+completo. Vamos ler informações sobre alguns clientes e imprimir qual gastou
+mais na nossa loja ao todo e qual fez a maior compra única até o momento.
+Também vamos escrever um mini-json com essas informações.
+
+Aqui estão as infos dos clientes, você pode salvá-las em um arquivo
+`clientes.json`.
+
+```json
+[
+    {
+        "cliente": "NSeiE Eletríca",
+        "compras": [
+            {
+                "data": "12/06/2020",
+                "valor": 110.90
+            },
+            {
+                "data": "15/04/2020",
+                "valor": 24.87
+            },
+            {
+                "data": "05/01/2020",
+                "valor": 202.65
+            }
+        ]
+    },
+    {
+        "cliente": "MiniTop LTDA",
+        "compras": [
+            {
+                "data": "04/11/2020",
+                "valor": 103.99
+            },
+            {
+                "data": "30/10/2020",
+                "valor": 66.90
+            },
+            {
+                "data": "15/08/2020",
+                "valor": 189.00
+            },
+            {
+                "data": "22/02/2020",
+                "valor": 45.00
+            }
+        ]
+    },
+    {
+        "cliente": "Super Max Eletro CO.",
+        "compras": [
+            {
+                "data": "03/07/2020",
+                "valor": 34.23
+            },
+            {
+                "data": "17/04/2020",
+                "valor": 11.99
+            },
+            {
+                "data": "20/03/2020",
+                "valor": 105.87
+            }
+        ]
+    }
+]
+```
+
+Então o programa que faz isso fica assim:
+
+```cpp
+#include <iostream>
+#include <fstream>
+
+#include "json.hpp"  // Inclui a biblioteca
+
+int main(int argc, char* argv[]) {
+    if (argc != 2) {
+        std::cout << "Uso: " << argv[0] << " [arquivo]" << std::endl;
+        return 1;
+    }
+
+    using json = nlohmann::json;  // Atalho para o tipo
+
+    // Cria um json, pode ser uma lista, objeto, número...
+    json clientes;
+
+    // Lê do arquivo passado
+    std::ifstream(argv[1]) >> clientes;
+
+    // Vai guardas as informações que estamos procurando
+    std::string maiorCompradorTotal = "none";
+    double maiorValorTotal = 0;
+
+    std::string maiorCompradorUnico = "none";
+    double maiorValorUnico = 0;
+
+    // Itera sobre os clientes
+    for (auto cliente : clientes ) {
+        double valorTotal = 0;
+        double maiorCompra = 0;
+
+        // Itera sobre as compras
+        for (auto compra : cliente["compras"]) {
+            double valor = compra["valor"];
+
+            valorTotal += valor;
+            if (valor > maiorCompra) maiorCompra = valor;
+        }
+
+        // Atualiza as váriaveis externas, caso o cliente tenha compras maiores
+        if (valorTotal > maiorValorTotal) {
+            maiorCompradorTotal = cliente["cliente"].get<std::string>();  // Garante o tipo
+            maiorValorTotal = valorTotal;
+        }
+
+        if (maiorCompra > maiorValorUnico) {
+            maiorCompradorUnico = cliente["cliente"].get<std::string>();  // Garante o tipo
+            maiorValorUnico = maiorCompra;
+        }
+    }
+
+    // Mostra as informações
+    std::cout << "Maior comprador é: " << maiorCompradorTotal << std::endl;
+    std::cout << "Maior compra foi feita por: " << maiorCompradorUnico << std::endl;
+
+    // Cria um JSON com mais dados
+    json maioresClientes = {
+        {"maiorCompra", {
+                {"cliente", maiorCompradorUnico},
+                {"valor", maiorValorUnico}
+            }},
+        {"maiorComprador", {
+                {"cliente", maiorCompradorTotal},
+                {"valor", maiorValorTotal}
+            }},
+    };
+
+    // Salva o json para um arquivo
+    std::ofstream("maiores_clientes.json") << maioresClientes.dump(4) << std::endl;
+}
+```
+
+Simples não? Essa biblioteca é uma maravilha de usar!
+
+Mas vamos ver se ela funciona como o esperado:
+
+```bash
+$ g++ main.cpp
+$ ./a.out clientes.json
+Maior comprador é: MiniTop LTDA
+Maior compra foi feita por: NSeiE Eletríca
+$ cat maiores_clientes.json
+{
+    "maiorCompra": {
+        "cliente": "NSeiE Eletríca",
+        "valor": 202.65
+    },
+    "maiorComprador": {
+        "cliente": "MiniTop LTDA",
+        "valor": 404.89
+    }
+}
+```
+
+Então é isso por hoje, se quiser experimentar mudando os valores do json para
+ver se continua funcionando, isso é bem legal, assim como tentar criar um
+programa para procurar outras informações, por exemplo o cliente que fez mais
+compras a cada mês. Também recomendo dar uma uma olhada na [documentação
+oficial](https://nlohmann.github.io/json/) da biblioteca.
+
+Continue programando, e até semana que vem!
 
