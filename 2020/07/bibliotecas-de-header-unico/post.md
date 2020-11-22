@@ -19,11 +19,12 @@ Elas são um **único arquivo** que você pode incluir no seu programa e linkar
 
 É claro que, para muitos casos, elas podem não ser tão interessantes,
 principalmente quando se precisa de algo bem completo. Mas para a maior parte
-dos usos, como funções secundárias da sua aplicação ou para ajudar a escrer um
+dos usos, como funções secundárias da sua aplicação ou para ajudar a escrever um
 programinha rápido, elas podem ser a solução **ideal**.
 
-Nesses links: [1]() e [2]() - você vai encontrar **várias bibliotecas** desse
-tipo, para suprir as mais diversas funções, desde de criptografia, física,
+Nesses links: [1](https://github.com/nothings/single_file_libs) e
+[2](https://github.com/nothings/stb) - você vai encontrar **várias bibliotecas**
+desse tipo, para suprir as mais diversas funções, desde de criptografia, física,
 álgebra, trabalhar com imagens e muito mais.
 
 Encontrou uma que quer testar? É só baixar ela e usar:
