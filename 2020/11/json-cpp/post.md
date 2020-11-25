@@ -1,15 +1,13 @@
-Olá e bem vindos à mais um post. Hoje vamos falar sobre dados e como
-armazená-los ou comunicá-los efetivamente. Hoje vamos falar sobre JSON e
-mais especificamente sobre como trabalhar com ele na linguagem de
-programação C++.
+Olá! Seja bem-vindo a mais um post. Hoje vamos falar sobre **dados** e como
+**armazená-los** ou **comunicá-los** efetivamente. Mais especificamente, o tópico é *JSON* e, ainda mais especificamente, sobre como trabalhar com ele na linguagem de
+programação *C++*.
 
-JSON nada mais é do que um formato de arquivos (.json) e comunicação de dados.
+*JSON* nada mais é do que um **formato de arquivos** (*.json*) e **comunicação de dados**.
 Significa *JavaScript Objecr Notation* (Notação de Objeto do JavaScript) e se
-originou como uma forma de facilitar a comunicação de servidores com páginas da
-web (que normalmente são programadas em JavaScript), e já que a web se tornou
-tão grande como é hoje, virtualmente **todas** as linguagens de programação
-ganharam uma biblioteca de serialização de JSON. Aqui está uma amostra de como
-são armazenados dados nesse formato:
+originou como uma forma de facilitar a **comunicação de servidores** com páginas da
+web (que normalmente são programadas em *JavaScript*). E, já que essa se expandiu tanto nos últimos anos, virtualmente **todas** as linguagens de programação
+ganharam uma biblioteca de serialização de *JSON*. Aqui está uma amostra de como
+são armazenados os dados nesse formato:
 
 ```json
 {
@@ -25,8 +23,8 @@ são armazenados dados nesse formato:
 }
 ```
 
-Mas, é claro, ele também pode ser usado para armazenar coisas mais úteis, como
-dados de um cliente.
+Ele também pode ser usado para **armazenar** coisas mais úteis, como
+dados de um cliente, por exemplo:
 
 ```json
 {
@@ -57,25 +55,28 @@ dados de um cliente.
 ```
 
 Algumas das grandes vantagens em usar esse formato para armazenar suas
-informações ao invés de algo como o que foi apresentado no nosso post sobre
-[trabalhar com arquivos em
-c++](https://moskoscode.com/trabalhando-com-arquivos-em-c/) são:
- - Portabilidade: Os arquivos podem ser lidos a partir de várias linguagens de
-   programação de uma maneira fácil.
- - Retrocompatibilidade: Como os valores são acessados por chaves, uma futura
-   reorganização dos dados ou adição de mais valores é improvável de quebrar um
-   versão anterior do programa.
- - Facilidade. É muito mais simples de usar uma biblioteca de JSON do que
-   *fstream*s (para esse propósito)
+informações - ao invés de algo como o que foi apresentado no nosso post sobre como
+"[trabalhar com arquivos em
+c++](https://moskoscode.com/trabalhando-com-arquivos-em-c/)" - são:
 
-Gostou? Então vamos aprender a usar. Primeiro você vai querer agarrar uma cópia
+ - **Portabilidade**: Os arquivos podem ser lidos a partir de várias linguagens de
+   programação de uma maneira fácil;
+ - **Retrocompatibilidade**: Como os valores são acessados por chaves, uma futura
+   reorganização dos dados ou adição de mais valores é improvável de quebrar um
+   versão anterior do programa;
+ - **Facilidade**: É muito mais simples de usar uma biblioteca de *JSON* do que
+   *fstream*s (para esse propósito).
+
+Gostou? Então vamos aprender a usar: 
+
+Primeiro você vai querer agarrar uma **cópia**
 da [biblioteca de header
 único](https://moskoscode.com/bibliotecas-de-header-unico/)
-[`nlohmann/json`](https://github.com/nlohmann/json), é só clicar
+[`nlohmann/json`](https://github.com/nlohmann/json) (é só clicar
 [aqui](https://raw.githubusercontent.com/nlohmann/json/master/single_include/nlohmann/json.hpp)
-para a versão estável mais recente.
+para a versão estável mais recente).
 
-Vamos ver como ficaria o exemplo do cliente se fossemos criá-lo a partir do C++
+Vamos ver como ficaria o exemplo do cliente se fossemos criá-lo a partir do *C++*:
 
 ```cpp
 #include <iostream>
@@ -124,7 +125,7 @@ int main() {
 }
 ```
 
-Como pode ver é super simples, vamos ver se funcionou:
+É super simples! Agora o próximo passo é checar se funcionou:
 
 ```bash
 $ g++ main.cpp
@@ -156,16 +157,17 @@ $ ./a.out
 }
 ```
 
-Certinho, a ordem está diferente, mas JSON não se importa com ela (só em
+A ordem está diferente, mas *JSON* não se **importa** com ela (só em
 listas).
 
-Mas a biblioteca faz mais do que isso, ela também é capaz de ler arquivos e
-escreve-los com facilidade. Vamos ver como é isso em um exemplo final e mais
-completo. Vamos ler informações sobre alguns clientes e imprimir qual gastou
-mais na nossa loja ao todo e qual fez a maior compra única até o momento.
-Também vamos escrever um mini-json com essas informações.
+Mas a biblioteca faz mais do que isso. Ela também é capaz de **ler arquivos** e
+**escrevê-los** com facilidade. O primeiro passo é aplicar isso em um exemplo final e mais
+complexo. Então iremos ler informações sobre alguns clientes e imprimir qual gastou
+mais na nossa loja e qual fez a maior compra única até o momento.
+E, por último, vamos escrever um "*mini-json*" com essas informações.
 
-Aqui estão as infos dos clientes, você pode salvá-las em um arquivo
+• Recomendamos que salve as informações dos clientes em um arquivo e então prossiga:
+
 `clientes.json`.
 
 ```json
@@ -228,7 +230,7 @@ Aqui estão as infos dos clientes, você pode salvá-las em um arquivo
 ]
 ```
 
-Então o programa que faz isso fica assim:
+Em seguida:
 
 ```cpp
 #include <iostream>
@@ -250,7 +252,7 @@ int main(int argc, char* argv[]) {
     // Lê do arquivo passado
     std::ifstream(argv[1]) >> clientes;
 
-    // Vai guardas as informações que estamos procurando
+    // Guarda as informações que estamos procurando
     std::string maiorCompradorTotal = "none";
     double maiorValorTotal = 0;
 
@@ -303,9 +305,9 @@ int main(int argc, char* argv[]) {
 }
 ```
 
-Simples não? Essa biblioteca é uma maravilha de usar!
+Simples, não? Essa biblioteca é uma maravilha de usar!
 
-Mas vamos ver se ela funciona como o esperado:
+Por último, vamos checar se tudo funciona como o esperado:
 
 ```bash
 $ g++ main.cpp
@@ -315,7 +317,7 @@ Maior compra foi feita por: NSeiE Eletríca
 $ cat maiores_clientes.json
 {
     "maiorCompra": {
-        "cliente": "NSeiE Eletríca",
+        "cliente": "NSei Elétrica",
         "valor": 202.65
     },
     "maiorComprador": {
@@ -325,11 +327,24 @@ $ cat maiores_clientes.json
 }
 ```
 
-Então é isso por hoje, se quiser experimentar mudando os valores do json para
-ver se continua funcionando, isso é bem legal, assim como tentar criar um
-programa para procurar outras informações, por exemplo o cliente que fez mais
-compras a cada mês. Também recomendo dar uma uma olhada na [documentação
+Por hoje é isso! Se quiser mudar os valores do *json* para
+ver se continua funcionando, assim como criar um
+programa para procurar outras informações - como o cliente que fez mais
+compras a cada mês, por exemplo -, sinta-se à vontade. Além disso, recomendo dar uma uma olhada na [documentação
 oficial](https://nlohmann.github.io/json/) da biblioteca.
 
 Continue programando, e até semana que vem!
 
+---
+
+Gostou de aprender sobre isso? Quer aprender mais? 
+
+Considere nos [apoiar no Catarse](https://www.catarse.me/moskoscode), avalie as [recompensas](https://www.catarse.me/moskoscode) e ajude a fortalecer o Moskos' Codefield!
+
+Se quiser, se inscreva na nossa [newsletter](https://moskoscode.com/newsletter) e nos siga nas nossas [redes sociais](https://linktr.ee/moskoscode) para não perder novos posts!
+
+Se gostou, compartilhe! E até semana que vem ;)
+
+[Instagram](https://www.instagram.com/moskoscode)
+[Facebook](https://www.facebook.com/moskoscode)
+[Twitter](https://www.twitter.com/moskoscode)
