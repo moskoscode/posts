@@ -99,7 +99,7 @@ function draw() {
   desenhar(lista);
 }
 
-// Enche a lista com numeros aleatorios
+// Enche a lista com números aleatórios
 function encher(l) {
   l.length=0;  // Esvazia a lista
   for (var i = 0; i < tamanho; ++i) lista.push(random(0, 255));
@@ -113,4 +113,101 @@ function desenhar(l) {
   }
 }
 ```
+
+Então pra poder realmente ver o que acontece em cada parte do processo, temos
+que fazer de um jeito que dê para mostrar na tela cada operação. No caso do
+BubbleSort isso é bem fácil, já que os loops estão bem ali é só decompor os
+passos para acontecerem um de cada vez. Então vamos criar uma função
+`passo_bubble_sort()` e mover a variável `final` para fora da função, para que
+ela mantenha seu valor entre invocações.
+
+
+```javascript
+// - Váriaveis BubbleSort
+var final = null;    // Controla qual o último item que ainda devemos comparar
+var bubble_pos = 0;  // Controla o próximo item que devemos comparar
+
+// Dá um passo na ordenação da lista com BubbleSort
+function passo_bubble_sort(lista) {
+  // Inicializa o final se ainda não tiver sido
+  if (final === null) final = lista.length;
+
+  // Se ainda temos itens não posicionados
+  if (final > 1) {
+    // Olha o próximo item da lista e troca se estiver errado
+    if (lista[bubble_pos] > lista[bubble_pos + 1]) {
+      troca(lista, i, i + 1);
+    }
+
+    // Avança para o próximo item
+    ++bubble_pos;
+  }
+
+  // Se estivermos no fim, marca que o último item foi posicionado e volta pro começo
+  if (bubble_pos > final) {
+    bubble_pos = 0;
+    --final;
+  }
+}
+```
+
+E com isso fica melhor de visualizar:
+
+<iframe style="width: 400px; height: 200px; overflow: hidden;" scrolling="no" frameborder="10"
+src="https://editor.p5js.org/eduardommosko@gmail.com/embed/k4uOl16VR"></iframe>
+
+```javascript
+var lista = [];
+var ordenada = false;
+const tamanho = 400;
+
+// Inicializa programa
+function setup() {
+  createCanvas(tamanho, 200);
+  frameRate(15);
+  encher(lista);
+}
+
+// Desenha visualização
+function draw() {
+  background(220);
+
+  // Avança um tanto a ordenação
+  for (var i=0; i<60; ++i)
+    passo_bubble_sort(lista);
+
+  // Se terminar, enche a lista de novo
+  if (final < 2) {
+    encher(lista);
+    final = null;
+  }
+
+  desenhar(lista);
+}
+```
+
+Agora dá pra **ver** o quão ineficiente o BubbleSort realmente é. Pega cada
+barrinha e leva pro final comparando uma por uma até o final e aí faz de novo e
+de novo e de novo...
+
+Certamente tem como fazer melhor que isso né??
+
+# MergeSort
+
+Agora entramos no universo do MergeSort, um algoritimo **muito** mais rápido.
+Mas como tudo, tem um porém: ele também precisa de **muito** mais memória do
+que o BubbleSort. Enquanto o máximo que BubbleSort usa é uma váriavel
+temporária, o MergeSort (em sua forma básica) precisa de uma segunda lista
+inteira do mesmo tamanho da primeira!
+
+Então vamos lá, como ele funciona? O estilo dele é o que chamamos de "Dividir e
+Conquistar" já que ele
+
+Esse algoritimo parte de 2 ideias base: A primeira é que se tivermos 2 listas
+pré ordenadas podemos mescla-las com menos comparações do que precisáriamos pra
+ordenar uma lista do mesmo tamanho. Como? Se sabemos que o primeiro item das
+duas listas são os menores que há, só precisamos saber qual deles é o mais
+menor e já teremos **certeza** que ele será o primeiro da lista final. A
+segunda ideia é que cada número em si pode ser considerado uma lista de apenas
+um item, tal qual está **sempre** ordenada.
 
