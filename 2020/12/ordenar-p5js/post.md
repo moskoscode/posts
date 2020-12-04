@@ -195,19 +195,76 @@ Certamente tem como fazer melhor que isso né??
 # MergeSort
 
 Agora entramos no universo do MergeSort, um algoritimo **muito** mais rápido.
-Mas como tudo, tem um porém: ele também precisa de **muito** mais memória do
-que o BubbleSort. Enquanto o máximo que BubbleSort usa é uma váriavel
-temporária, o MergeSort (em sua forma básica) precisa de uma segunda lista
-inteira do mesmo tamanho da primeira!
+Mas como tudo, isso tem um preço: precisa de **muito** mais memória do que o
+BubbleSort. Enquanto o máximo que aquele usa é uma váriavel temporária, o
+MergeSort (em sua forma básica) precisa de uma segunda lista **inteira** do mesmo
+tamanho da primeira!
 
 Então vamos lá, como ele funciona? O estilo dele é o que chamamos de "Dividir e
 Conquistar" já que ele
 
 Esse algoritimo parte de 2 ideias base: A primeira é que se tivermos 2 listas
-pré ordenadas podemos mescla-las com menos comparações do que precisáriamos pra
-ordenar uma lista do mesmo tamanho. Como? Se sabemos que o primeiro item das
-duas listas são os menores que há, só precisamos saber qual deles é o mais
-menor e já teremos **certeza** que ele será o primeiro da lista final. A
-segunda ideia é que cada número em si pode ser considerado uma lista de apenas
-um item, tal qual está **sempre** ordenada.
+pré-ordenadas podemos mescla-las com (muito) menos comparações do que
+precisáriamos pra ordenar uma lista do mesmo tamanho. Como? Se sabemos que o
+primeiro item das duas listas são os menores que há, só precisamos saber qual
+deles é o mais menor e já teremos **certeza** que esse será o primeiro da lista
+final. A segunda ideia é que cada número em si pode ser considerado uma lista
+de apenas um item, tal qual está **sempre** em ordem.
+
+Desses princípios parte a conclusão: se eu tenho várias listas pré-ordenadas e
+meclar duas delas é tão mais rápido que ordenar, isso significa que mesclar
+elas entre si vai me dar listas pré-ordenadas cada vez maiores, e quando chegar
+no tamanho da lista inicial ainda vai ser mais rápido que ordenar comparando
+item por item.
+
+A forma mais comum de implementar isso é com uma função recursiva, já que isso
+se encaixa muito bem no problema.
+
+```javascript
+// Ordena a lista com MergeSort
+function merge_sort(lista, comeco = 0, fim = lista.length) {
+  if (buffer === null) {
+    buffer = [];
+    buffer.length = lista.length; // JavaScript ¯\_(ツ)_/¯
+  }
+
+  if (fim - comeco > 1) {
+    var meio = (int)((fim + comeco) / 2);
+    merge_sort(lista, comeco, meio);
+    merge_sort(lista, meio, fim);
+
+    // Copia a seção da lista pro buffer
+    for (var i = comeco; i < fim; ++i) {
+      buffer[i] = lista[i];
+    }
+
+    var c = comeco;
+    var m = meio;
+    var i = comeco;
+    while (c < meio && m < fim) {
+      if (buffer[c] < buffer[m]) {
+        lista[i] = buffer[c];
+        ++i;
+        ++c;
+      } else {
+        lista[i] = buffer[m];
+        ++i;
+        ++m;
+      }
+      while (m < meio) {
+        lista[i] = buffer[m];
+        ++i;
+        ++m;
+      }
+
+      while (c < meio) {
+        lista[i] = buffer[c];
+        ++i;
+        ++c;
+      }
+    }
+
+  }
+}
+```
 
