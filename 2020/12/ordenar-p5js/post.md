@@ -221,8 +221,11 @@ A forma mais comum de implementar isso é com uma função recursiva, já que is
 se encaixa muito bem no problema.
 
 ```javascript
+var buffer = null;
+
 // Ordena a lista com MergeSort
 function merge_sort(lista, comeco = 0, fim = lista.length) {
+  // Inicializa um buffer auxiliar para guardarmos as listas intermediárias
   if (buffer === null) {
     buffer = [];
     buffer.length = lista.length; // JavaScript ¯\_(ツ)_/¯
@@ -230,6 +233,8 @@ function merge_sort(lista, comeco = 0, fim = lista.length) {
 
   if (fim - comeco > 1) {
     var meio = (int)((fim + comeco) / 2);
+
+    // Pré-ordena cada metade da lista
     merge_sort(lista, comeco, meio);
     merge_sort(lista, meio, fim);
 
@@ -238,11 +243,13 @@ function merge_sort(lista, comeco = 0, fim = lista.length) {
       buffer[i] = lista[i];
     }
 
+    // Mescla as duas metades ordenadas
     var c = comeco;
     var m = meio;
     var i = comeco;
-    while (c < meio && m < fim) {
-      if (buffer[c] < buffer[m]) {
+
+    while (c < meio && m < fim) {  // Enquanto não chegar no fim de uma das metades
+      if (buffer[c] < buffer[m]) {  // Copia a parte menor pra lista
         lista[i] = buffer[c];
         ++i;
         ++c;
@@ -251,19 +258,101 @@ function merge_sort(lista, comeco = 0, fim = lista.length) {
         ++i;
         ++m;
       }
-      while (m < meio) {
+
+      while (c < meio) {  // Copia a metade esquerda até o final
+        lista[i] = buffer[c];
+        ++i;
+        ++c;
+      }
+
+      while (m < meio) {  // Copia a metade direita até o final
         lista[i] = buffer[m];
         ++i;
         ++m;
       }
 
-      while (c < meio) {
-        lista[i] = buffer[c];
-        ++i;
-        ++c;
-      }
     }
 
+  }
+}
+```
+
+Mas dessa forma temos o mesmo problema de antes: não podemos visualizar. E
+nesse caso como a implementação é recursiva não é tão óbvio de adaptar.
+Felizmente toda implementação recursiva pode ser traduzida em um loop,
+inclusive com mais eficiência grande parte das vezes. A forma que eu pensei em
+fazer isso é "simulando" a recursividade com uma estrutura de dados de
+**stack** (*pilha*) que guarda uma pilha de estados do processamento, como se
+devemos ordenar ou mesclar. Dessa forma, quando formos ordenar colocamos na
+seção da lista que queremos que seja organizada na pilha, aí e o processamento
+só voltará para a seção atual quando a outra estiver ordenada. Vamos ver isso
+em ação:
+
+```
+// Ordena a lista com MergeSort em loop
+function merge_sort_loop(lista, comeco = 0, fim = lista.length) {
+  var buffer = [];
+  buffer.length = lista.length; // JavaScript ¯\_(ツ)_/¯
+
+  var stack = [];
+  stack.push(new Estado(comeco, fim, md.ORDENAR));
+
+  // Enquanto tiverem itens na stack
+  while (stack.length > 0) {
+    var estado = ultimo(stack);
+    console.log(estado)
+    console.log(lista.slice(estado.comeco, estado.fim))
+    var mm;
+
+    switch (estado.modo) {
+      case md.ORDENAR:
+        if (estado.fim - estado.comeco < 2) {
+          stack.pop();
+          break;
+        }
+        stack.push(new Estado(estado.comeco, estado.meio));
+        stack.push(new Estado(estado.meio, estado.fim));
+        estado.modo = md.MESCLAR;
+        break;
+
+      case md.MESCLAR:
+        var i;
+
+        // Copia a seção da lista pro buffer
+        for (i = estado.comeco; i < estado.fim; ++i) {
+          buffer[i] = lista[i];
+        }
+
+        // Mescla as duas metades ordenadas
+        var c = estado.comeco;
+        var m = estado.meio;
+        i = estado.comeco;
+
+        while (c < estado.meio && m < estado.fim) {
+          if (buffer[c] < buffer[m]) {
+            lista[i] = buffer[c];
+            ++i;
+            ++c;
+          } else {
+            lista[i] = buffer[m];
+            ++i;
+            ++m;
+          }
+        }
+
+        while (c < estado.meio) {
+            lista[i] = buffer[c];
+            ++i;
+            ++c;
+        }
+        while (m < estado.fim) {
+            lista[i] = buffer[m];
+            ++i;
+            ++m;
+        }
+
+        stack.pop();
+    }
   }
 }
 ```
