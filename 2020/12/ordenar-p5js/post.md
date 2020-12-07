@@ -200,9 +200,6 @@ BubbleSort. Enquanto o máximo que aquele usa é uma váriavel temporária, o
 MergeSort (em sua forma básica) precisa de uma segunda lista **inteira** do mesmo
 tamanho da primeira!
 
-Então vamos lá, como ele funciona? O estilo dele é o que chamamos de "Dividir e
-Conquistar" já que ele
-
 Esse algoritimo parte de 2 ideias base: A primeira é que se tivermos 2 listas
 pré-ordenadas podemos mescla-las com (muito) menos comparações do que
 precisáriamos pra ordenar uma lista do mesmo tamanho. Como? Se sabemos que o
@@ -211,11 +208,12 @@ deles é o mais menor e já teremos **certeza** que esse será o primeiro da lis
 final. A segunda ideia é que cada número em si pode ser considerado uma lista
 de apenas um item, tal qual está **sempre** em ordem.
 
-Desses princípios parte a conclusão: se eu tenho várias listas pré-ordenadas e
-meclar duas delas é tão mais rápido que ordenar, isso significa que mesclar
-elas entre si vai me dar listas pré-ordenadas cada vez maiores, e quando chegar
-no tamanho da lista inicial ainda vai ser mais rápido que ordenar comparando
-item por item.
+Desses princípios parte a conclusão: se cada número é uma lista, se eu mesclar
+dois deles vou ter uma lista maior, a qual eu vou depois poder mesclar com
+outra, o que me daria uma lista ainda maior. Aí posso mesclar essa e meclar e
+mesclar até que eventualmente vou chegar em uma lista ordenada do tamanho da
+lista original. E já que o tempo para mesclar é tão mais rápido assim, todo
+esse processo ainda vai demorar menos do que ordenar comparando item por item.
 
 A forma mais comum de implementar isso é com uma função recursiva, já que isso
 se encaixa muito bem no problema.
@@ -288,34 +286,37 @@ seção da lista que queremos que seja organizada na pilha, aí e o processament
 só voltará para a seção atual quando a outra estiver ordenada. Vamos ver isso
 em ação:
 
-```
+```javascript
 // Ordena a lista com MergeSort em loop
 function merge_sort_loop(lista, comeco = 0, fim = lista.length) {
   var buffer = [];
   buffer.length = lista.length; // JavaScript ¯\_(ツ)_/¯
 
+  // Cria a stack de partes à serem ordenadas
   var stack = [];
+
+  // Manda ordenar a lista inteira
   stack.push(new Estado(comeco, fim, md.ORDENAR));
 
   // Enquanto tiverem itens na stack
   while (stack.length > 0) {
-    var estado = ultimo(stack);
-    console.log(estado)
-    console.log(lista.slice(estado.comeco, estado.fim))
-    var mm;
+    var estado = ultimo(stack);  // Pega o estado atual
 
     switch (estado.modo) {
-      case md.ORDENAR:
-        if (estado.fim - estado.comeco < 2) {
+      case md.ORDENAR:  // Caso o modo seja ordenar
+        if (estado.fim - estado.comeco < 2) {  // Se só tiver um item, já está ordenado
           stack.pop();
           break;
         }
+        // Manda ordenar cada metade
         stack.push(new Estado(estado.comeco, estado.meio));
         stack.push(new Estado(estado.meio, estado.fim));
+
+        // Manda mesclar as metades ordenadas
         estado.modo = md.MESCLAR;
         break;
 
-      case md.MESCLAR:
+      case md.MESCLAR:  // Caso o modo seja mesclar
         var i;
 
         // Copia a seção da lista pro buffer
@@ -351,9 +352,239 @@ function merge_sort_loop(lista, comeco = 0, fim = lista.length) {
             ++m;
         }
 
+        // Marca como ordenada
         stack.pop();
     }
   }
 }
+
+// Guarda os possíveis modos de operação
+const md = {
+  ORDENAR: 'o',
+  MESCLAR: 'm'
+}
+
+// Cria um novo estado do merge sort
+function Estado(comeco, fim, modo = md.ORDENAR) {
+  this.comeco = comeco;
+  this.meio = floor((comeco + fim) / 2);
+  this.fim = fim;
+  this.modo = modo;
+}
+
+// Retorna o último item da lista
+function ultimo(lista) {
+  return lista[lista.length - 1];
+}
 ```
+
+Mas ainda precisamos adaptar essa versão para acontecer em passos ao invés de
+de uma vez só.
+
+```javascript
+var buffer = null;
+var stack = null;
+
+// Ordena a lista com MergeSort em loop
+function passo_merge_sort(lista, comeco = 0, fim = lista.length) {
+  if (buffer === null) {
+    buffer = [];
+    buffer.length = lista.length; // JavaScript ¯\_(ツ)_/¯
+  }
+
+  if (stack === null) {
+    // Cria a stack de partes à serem ordenadas
+    stack = [];
+
+    // Manda ordenar a lista inteira
+    stack.push(new Estado(comeco, fim, md.ORDENAR));
+  }
+
+  // Se tiverem itens na stack
+  if (stack.length > 0) {
+    var estado = ultimo(stack); // Pega o estado atual
+
+    switch (estado.modo) {
+      case md.ORDENAR: // Caso o modo seja ordenar
+        if (estado.fim - estado.comeco < 2) { // Se só tiver um item, já está ordenado
+          stack.pop();
+          break;
+        }
+        // Manda ordenar cada metade
+        stack.push(new Estado(estado.comeco, estado.meio));
+        stack.push(new Estado(estado.meio, estado.fim));
+
+        // Manda mesclar as metades ordenadas
+        estado.modo = md.MESCLAR;
+        break;
+
+      case md.MESCLAR: // Caso o modo seja mesclar
+
+        // Se estado.c não tiver sido definido (não tiver começado a mesclar)
+        if (estado.c === undefined) {
+          // Copia a seção da lista pro buffer
+          for (var i = estado.comeco; i < estado.fim; ++i) {
+            buffer[i] = lista[i];
+          }
+
+          // Mescla as duas metades ordenadas
+          estado.c = estado.comeco;
+          estado.m = estado.meio;
+          estado.i = estado.comeco;
+        }
+
+
+        if (estado.c < estado.meio && estado.m < estado.fim) {
+          if (buffer[estado.c] < buffer[estado.m]) {
+            lista[estado.i] = buffer[estado.c];
+            ++estado.i;
+            ++estado.c;
+          } else {
+            lista[estado.i] = buffer[estado.m];
+            ++estado.i;
+            ++estado.m;
+          }
+        } else if (estado.c < estado.meio) {
+          lista[estado.i] = buffer[estado.c];
+          ++estado.i;
+          ++estado.c;
+        } else if (estado.m < estado.fim) {
+          lista[estado.i] = buffer[estado.m];
+          ++estado.i;
+          ++estado.m;
+        } else {
+          // Marca como ordenada
+          stack.pop();
+        }
+
+    }
+  }
+}
+```
+
+E agora é só colocar no `draw()` e visualizar:
+
+<iframe style="width: 400px; height: 200px; overflow: hidden;" scrolling="no" frameborder="10"
+src="https://editor.p5js.org/eduardommosko@gmail.com/embed/kalsei6o9"></iframe>
+
+```javascript
+var lista = [];
+var ordenada = false;
+const tamanho = 400;
+
+// Inicializa programa
+function setup() {
+  createCanvas(tamanho, 200);
+  frameRate(15);
+  encher(lista);
+}
+
+// Desenha visualização
+function draw() {
+  background(220);
+
+  for (var i = 0; i < 20; ++i)
+    passo_merge_sort(lista);
+
+  desenhar(lista);
+
+  if (stack.length == 0) {
+    frameRate(1);
+    desenhar(lista);
+    encher(lista);
+    stack = null;
+
+  } else {
+    frameRate(15);
+    desenhar(lista);
+  }
+}
+```
+
+# Algoritimo EXTRA!
+
+Lembra que no começo do post eu falei que existem algoritimos de ordenação com
+os propósito mais estranhos? Esse é um deles, o **BogoSort**. Ele nunca é usado
+na prática por ser extremamente ineficiente, mas ele é divertido de implementar.
+
+Ele parte do princípio que existe *alguma* permutação ordenada dos valores de
+uma lista. Assim se olharmos todas elas, indo de uma a outra aleatóriamente,
+uma hora vamos encontrar a ordenada.
+
+A implementação é basicamente assim:
+ 1. Se a lista estiver ordenada retorne, se não continue.
+ 2. Gere um ordem aleatória de itens.
+ 3. Volte para o passo 1.
+
+Em javascript:
+
+```javascript
+// Ordena uma lista com BogoSort
+function bogo_sort(lista) {
+  while (!esta_ordenada(lista)) {  // Enquanto não estiver ordenada
+    ordem_aleatoria(lista);  // Gere uma ordem aleatória
+  }
+}
+
+// Gera uma permutação aleatória para uma lista
+function ordem_aleatoria(lista) {
+  for (var ultimo = lista.length; ultimo > 1; --ultimo) {
+    troca(lista, ultimo, floor(random(0, ultimo)));
+  }
+}
+
+// Checa se uma lista está ordenada
+function esta_ordenada(lista) {
+  for (var i = 0; i < lista.length-1; ++i) {
+    if (lista[i] > lista[i+1]) {
+      return false;
+    }
+  }
+  return true;
+}
+```
+
+E obviamente, é bem fácil de adaptar para passos:
+
+```javascript
+// Ordena uma lista com BogoSort
+function passo_bogo_sort(lista) {
+  if (!esta_ordenada(lista)) {  // Se não estiver ordenada
+    ordem_aleatoria(lista);  // Gere uma ordem aleatória
+  }
+}
+```
+
+Então vamos visualizar, me manda um print se - por acaso - o algoritimo
+consiguiu ordenar a lista enquanto você lê o post (Se sim, a visualização vai
+ser só a lista ordenada parada).
+
+<iframe style="width: 400px; height: 200px; overflow: hidden;" scrolling="no" frameborder="10"
+src="https://editor.p5js.org/eduardommosko@gmail.com/embed/agbapc1kn"></iframe>
+
+```javascript
+var lista = [];
+const tamanho = 400;
+
+// Inicializa programa
+function setup() {
+  createCanvas(tamanho, 200);
+  encher(lista);
+}
+
+// Desenha visualização
+function draw() {
+  background(220);
+
+  for (var i = 0; i < 20; ++i)
+    passo_bogo_sort(lista);
+
+  lista = lista.filter(Number);  // Arruma um bug estranho
+  desenhar(lista);
+}
+```
+
+Mas então é isso galera. Obrigado por ler, espero que tenha aprendido uma coisa
+ou duas, e até semana que vem. Não se esqueca de se inscrever na newsletter e nos
+apoiar no catarse se achou o conteúdo interessante.
 
