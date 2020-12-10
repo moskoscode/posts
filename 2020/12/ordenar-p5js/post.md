@@ -7,24 +7,29 @@
 -->
 
 Em 98.76777% dos programas de computador vai ser necessário ordenar alguma
-lista (estatística inventada). Por essa razão muito tempo foi investido tentando
+lista (estatística inventada). Por essa razão, muito tempo foi investido tentando
 descobrir a forma mais eficiente possível de fazer isso. O resultado foi a
-criação de inúmeros **algoritmos** com esse propósito, em que cada um deles possua uma
-**prioridade específica**.
+criação de inúmeros **algoritmos** com esse propósito, sendo que cada um deles possui uma
+**prioridade específica** como economizar memória, economizar tempo, atingir um balanco agradável
+entre os dois, ser fácil de implementar, ser engraçado....
 
-Entender a variedade deles pode ser fundamental em uma entrevista de
-emprego, por exemplo. Afinal, muitas vezes é cobrado uma implementação em quadro negro ou na
-hora de resolver um problema análogo. E que jeito melhor de entender algo do
-que vendo acontecer?
+Entender vários deles pode ser fundamental em vários momentos: em uma entrevista de emprego,
+nas quais muitas vezes cobram uma implementação em quadro negro, ou ainda, na
+hora de resolver um problema em que um detalhe de algum algoritimo pode ser a chave para
+encontrar uma solução. E que jeito melhor de entender algo do que vendo acontecer?
 
-Por isso , no post de hoje, vamos implementar 2 algoritmos (e um extra) de
-**ordenação**: *BubbleSort* e *MergeSort*. Entretanto faremos de modo que possamos visualizar o **progresso** deles - o que vai dificultar o processo de forma considerável.
+Por isso, no post de hoje, vamos implementar 2 algoritmos (e um extra) de
+**ordenação**: *BubbleSort* e *MergeSort*. Entretanto faremos isso de modo que
+possamos visualizar o **progresso** deles - o que vai dificultar considerávelmente
+nosso trabalho.
 
 Vamos fazer isso em *javascript* usando a *framework* de programação criativa
 **p5.js** - para facilitar o trabalho de criar a janela, desenhar linhas, entre outros. 
 
 • Lembrando: caso já tenha experiência em programação, pode nos acompanhar
 na sua linguagem de preferência.
+
+<!-- continuar rerevisão daqui -->
 
 # Bubble Sort
 
