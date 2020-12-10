@@ -20,11 +20,11 @@ encontrar uma solução. E que jeito melhor de entender algo do que vendo aconte
 
 Por isso, no post de hoje, vamos implementar 2 algoritmos (e um extra) de
 **ordenação**: *BubbleSort* e *MergeSort*. Entretanto faremos isso de modo que
-possamos visualizar o **progresso** deles - o que vai dificultar considerávelmente
-nosso trabalho.
+possamos visualizar o **progresso** deles - o que, se prepare, vai dificultar
+considerávelmente nosso trabalho.
 
 Vamos fazer isso em *javascript* usando a *framework* de programação criativa
-**p5.js** - para facilitar o trabalho de criar a janela, desenhar linhas, entre outros. 
+**p5.js** - para facilitar o trabalho de criar a janela, desenhar linhas, entre outros.
 
 • Lembrando: caso já tenha experiência em programação, pode nos acompanhar
 na sua linguagem de preferência.
@@ -33,10 +33,12 @@ na sua linguagem de preferência.
 
 # Bubble Sort
 
-*BubbleSort* é muito fácil de implementar. Nele, de início você **compara** o primeiro
-item com o **seguinte**  e, caso seja maior, deve **trocá-los** de lugar. Você irá repetir o processo
-até chegar ao final da lista e então terá certeza que o último item
-é o maior e por isso não é mais necessário compará-lo. Assim vai, até não ter mais pares para comparar!
+*BubbleSort* é muito fácil de implementar. Nele, de início você **compara** o
+primeiro item com o **seguinte**  e, caso seja maior, os **troca** de lugar.
+Você irá repetir o processo até chegar ao final da lista e então terá certeza
+que o último item é o maior e por isso não é mais necessário compará-lo, aí
+você volta do começo e continua comparando. Assim vai, até não ter mais pares
+para comparar!
 
 Podemos implementar isso em *javascript* com poucas linhas de código:
 
@@ -50,7 +52,7 @@ function bubble_sort(lista) {
   while (final > 1) {
 
     // Olha todos os items da lista, trocando os errados
-    por (var i = 0; i < final; ++i) {
+    for (var i = 0; i < final; ++i) {
       if (lista[i] > lista[i + 1]) {
         troca(lista, i, i + 1);
       }
@@ -69,8 +71,8 @@ function troca(lista, pos1, pos2) {
 }
 ```
 
-Entretanto, isso só nos apresenta a lista **organizada**. Se tentarmos **visualizar** isso com o
-*p5.js* vai ser super chato:
+Entretanto, isso só nos retorna a lista **organizada**. Se tentarmos
+**visualizar** isso com o *p5.js* vai ser super chato:
 
 <iframe style="width: 400px; height: 200px; overflow: hidden;" scrolling="no" frameborder="10"
 src="https://editor.p5js.org/eduardommosko@gmail.com/embed/4OqLkrUQ3"></iframe>
@@ -115,11 +117,12 @@ function desenhar(l) {
 }
 ```
 
-Para poder ver o que acontece em cada **parte** do processo, temos
-que fazer de um jeito que dê para mostrar na **tela cada operação**. No caso do
-*BubbleSort* isso é bem fácil, visto que é só **decompor** os *loops* para funcionarem um de cada vez. Então vamos **criar** uma **função**
-`passo_bubble_sort()` e mover a variável `final`, para que
-ela mantenha seu valor entre invocações.
+Para poder ver o que acontece em cada **parte** do processo, temos que fazer de
+um jeito que dê para mostrar na **tela a cada operação**. No caso do
+*BubbleSort* isso é bem fácil, visto que é só **decompor** os *loops* para
+darem apenas um "passo" cada vez. Então, para fazer isso, vamos **criar** uma
+**função** `passo_bubble_sort()` e tornar a variável `final` global, de forma
+que ela mantenha seu valor entre invocações.
 
 
 ```javascript
@@ -176,17 +179,25 @@ function draw() {
   for (var i=0; i<60; ++i)
     passo_bubble_sort(lista);
 
-  // Se terminar, enche a lista de novo
+  // Quando terminar, espera um pouco e enche a lista de novo
   if (final < 2) {
+    frameRate(1);
+    desenhar(lista);
     encher(lista);
     final = null;
+
+  } else {
+    frameRate(15);
+    desenhar(lista);
   }
 
   desenhar(lista);
 }
 ```
 
-Agora dá pra **ver** o quão ineficiente o *BubbleSort* realmente é. Leve todas as barras para o final, comparando-as, e repita o processo. 
+Agora dá pra **ver** o quão ineficiente o *BubbleSort* realmente é. Ele vai
+levando cada uma das as barrinhas até o final, comparando uma a uma, aí faz de
+novo, e de novo e de novo...
 
 *Certamente tem como fazer melhor que isso, né?*
 
@@ -194,25 +205,29 @@ Agora dá pra **ver** o quão ineficiente o *BubbleSort* realmente é. Leve toda
 
 Agora entramos no universo do *MergeSort*, um algoritimo muito mais **rápido**.
 Mas como tudo, isso tem um preço: é necessário muito mais **memória** do que o
-*BubbleSort*. Enquanto o máximo que ele usa é uma **váriavel temporária**, o
-*MergeSort* (em sua forma básica) precisa de uma segunda lista **inteira** do mesmo
-tamanho da primeira!
+*BubbleSort*. Enquanto o máximo que aquele usa é uma **váriavel temporária**, o
+*MergeSort* (em sua forma básica) precisa de uma segunda lista **inteira** do
+mesmo tamanho da primeira!
 
-Esse algoritmo parte de duas **ideias base**: 
+Esse algoritmo parte de duas **ideias base**:
 
-A primeira é que se tivermos duas listas
-*pré-ordenadas*, podemos mesclá-las com **menos comparações** do que
-precisaríamos para ordenar uma lista do mesmo tamanho. Se sabemos que o
-primeiro item de ambas as listas são **os menores**, teremos **certeza** que esse será, também, o primeiro da **lista
-final**. A segunda ideia é que cada número pode ser considerado uma lista
-de apenas **um item**, tal qual está **sempre** em ordem.
+A primeira é que se tivermos duas listas *pré-ordenadas*, podemos mesclá-las
+com **menos comparações** do que precisaríamos para ordenar uma lista do mesmo
+tamanho. Afinal, se sabemos que o primeiro item de ambas as listas são **os
+menores** disponíveis, teremos **certeza** que o menor entre eles será, também,
+o primeiro da **lista final**.
 
-Desses princípios, parte a seguinte conclusão: se cada número é uma lista, ao mesclar
-dois deles teremos um lista **ainda maior**. Com base nisso, é possível mesclar sucessivamente até chegar em uma lista ordenada do **tamanho da original**. E já que o tempo necessário para mesclar é **menor**, todo
-esse processo vai demorar menos do que ordenar **comparando** item por item.
+A segunda ideia é que cada número pode ser considerado uma lista de apenas **um
+item**, tal qual está **sempre** em ordem.
 
-A forma mais comum de implementar isso é com uma função **recursiva**, já que isso
-se encaixa muito bem no problema:
+Desses princípios, parte a conclusão: se cada número é uma lista, ao mesclar
+dois deles teremos um lista **ainda maior**. Com base nisso, é possível mesclar
+sucessivamente até chegar em uma lista ordenada do **tamanho da original**. E
+já que o tempo necessário para mesclar é bem **menor**, todo esse processo vai
+demorar menos do que ordenar **comparando** item por item.
+
+A forma mais comum de implementar isso é com uma função **recursiva**, já que
+isso se encaixa muito bem no problema:
 
 ```javascript
 var buffer = null;
@@ -271,13 +286,15 @@ function merge_sort(lista, comeco = 0, fim = lista.length) {
 }
 ```
 
-Dessa forma, temos o mesmo problema de antes: não podemos **visualizar**. E,
-nesse caso, como a implementação é **recursiva**, não é tão óbvio de adaptar.
-Felizmente, toda implementação recursiva pode ser traduzida em um *loop*,
-inclusive com mais eficiência. A **melhor** forma de fazer isso é "simulando" a recursividade com uma **estrutura** de dados de
-*stack* que guarda uma pilha de estados do **processamento**. Dessa forma, quando formos ordenar, colocamos na
-seção da lista que queremos, então o processamento
-só voltará para a seção atual quando a outra estiver ordenada. 
+Porém, dessa forma, temos o mesmo problema de antes: não podemos
+**visualizar**. E, nesse caso, como a implementação é **recursiva**, não é tão
+óbvio de adaptar. Felizmente, toda implementação recursiva pode ser traduzida
+para uma baseada em *loops*! A forma que vamos fazer isso é "simulando" a
+recursividade com uma **estrutura** de dados de *stack* que guarda uma pilha de
+estados do **processamento**. Dessa forma, quando formos ordenar, colocamos na
+pilha a seção da lista que queremos ordenada, aí na próxima iteração o loop vai
+ler ela e então o processamento só voltará para a seção anterior quando a que
+colocamos estiver ordenada.
 
 Vamos ver isso em ação:
 
@@ -291,7 +308,7 @@ function merge_sort_loop(lista, comeco = 0, fim = lista.length) {
   var stack = [];
 
   // Manda ordenar a lista inteira
-  stack.push(new Estado(comeco, fim, md.ORDENAR));
+  stack.push(new Estado(comeco, fim));
 
   // Enquanto tiverem itens na stack
   while (stack.length > 0) {
@@ -373,14 +390,14 @@ function ultimo(lista) {
 }
 ```
 
-Mas ainda precisamos **adaptar** essa versão para acontecer em passos ao invés de
-de uma vez só:
+Mas ainda precisamos **adaptar** essa versão para acontecer em passos ao invés
+de de uma vez só:
 
 ```javascript
 var buffer = null;
 var stack = null;
 
-// Ordena a lista com MergeSort em loop
+// Dá um passo na ordenação da lista com MergeSort
 function passo_merge_sort(lista, comeco = 0, fim = lista.length) {
   if (buffer === null) {
     buffer = [];
@@ -457,7 +474,7 @@ function passo_merge_sort(lista, comeco = 0, fim = lista.length) {
 }
 ```
 
-Agora é só colocar no `draw()` e **visualizar**:
+Agora é só colocar isso no `draw()` e **visualizar**:
 
 <iframe style="width: 400px; height: 200px; overflow: hidden;" scrolling="no" frameborder="10"
 src="https://editor.p5js.org/eduardommosko@gmail.com/embed/kalsei6o9"></iframe>
@@ -498,13 +515,14 @@ function draw() {
 
 # Algoritmo EXTRA!
 
-Lembra que no começo do post eu falei que existem algoritmos de **ordenação** com
-**vários propósitos** diferentes? Esse é um deles, o *BogoSort*. Ele nunca é usado
-na prática - por ser extremamente ineficiente -, mas é divertido de implementar.
+Lembra que no começo do post eu falei que existem algoritmos de **ordenação**
+com **vários propósitos** diferentes? Esse é um deles, o *BogoSort*. Ele nunca
+é usado na prática - por ser extremamente ineficiente - mas ele é divertido de
+implementar.
 
-Ele parte do princípio que existe alguma **permutação** ordenada dos valores de
-uma lista. Assim, se olharmos todas elas, indo de uma a outra aleatoriamente,
-uma hora vamos encontrar a ordenada.
+Ele parte do princípio que existe *alguma* **permutação** ordenada dos valores
+de uma lista. Assim, se olharmos todas elas, indo de uma a outra
+aleatoriamente, uma hora vamos encontrar a ordenada.
 
 A implementação:
  1. Se a lista estiver ordenada, retorne - senão, continue;
@@ -542,7 +560,7 @@ function esta_ordenada(lista) {
 E, obviamente, é bem fácil de **adaptar** para passos:
 
 ```javascript
-// Ordena uma lista com BogoSort
+// Dá um passo na ordenação com BogoSort
 function passo_bogo_sort(lista) {
   if (!esta_ordenada(lista)) {  // Se não estiver ordenada
     ordem_aleatoria(lista);  // Gere uma ordem aleatória
@@ -550,9 +568,9 @@ function passo_bogo_sort(lista) {
 }
 ```
 
-Então vamos visualizar! Me manda um print se o algoritmo
-conseguiu ordenar a lista enquanto você lê o post. Se sim, a visualização vai
-ser só a lista ordenada parada.
+Então vamos visualizar! Me manda um print se o algoritmo conseguiu ordenar a
+lista enquanto você lê o post. Se sim, a visualização vai ser só a lista
+ordenada parada.
 
 <iframe style="width: 400px; height: 200px; overflow: hidden;" scrolling="no" frameborder="10"
 src="https://editor.p5js.org/eduardommosko@gmail.com/embed/agbapc1kn"></iframe>
@@ -579,12 +597,12 @@ function draw() {
 }
 ```
 
-Por hoje é isso, galera! Obrigado por ler e espero que tenha aprendido uma coisa
-ou duas Até semana que vem!
+Por hoje é isso, galera! Obrigado por ler e espero que tenha aprendido uma
+coisa ou duas. Até semana que vem!
 
 ---
 
-Gostou de aprender sobre isso? Quer aprender mais? 
+Gostou de aprender sobre isso? Quer aprender mais?
 
 Considere nos [apoiar no Catarse](https://www.catarse.me/moskoscode), avalie as [recompensas](https://www.catarse.me/moskoscode) e ajude a fortalecer o Moskos' Codefield!
 
