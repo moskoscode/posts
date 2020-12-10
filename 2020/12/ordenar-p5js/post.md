@@ -6,38 +6,34 @@
   - Computador com TOC vs Código de Barras
 -->
 
-Em 98.76777% dos programas de computador vai ser necessário ordenar *alguma*
-lista (estatística inventada). Por isso muito tempo foi investido tentado
-descobrir a forma mais eficiente possível de fazer isso, o que resultou na
-criação de inúmeros algoritimos com esse propósito, cada um deles com alguma
-prioridade: economizar memória, economizar tempo, atingir um balanco agradável
-entre os dois, ser fácil de implementar, ser engraçado...
+Em 98.76777% dos programas de computador vai ser necessário ordenar alguma
+lista (estatística inventada). Por essa razão muito tempo foi investido tentando
+descobrir a forma mais eficiente possível de fazer isso. O resultado foi a
+criação de inúmeros **algoritmos** com esse propósito, em que cada um deles possua uma
+**prioridade específica**.
 
-Entender uma grande variedade deles pode ser fundamental em uma entrevista de
-emprego, nas quais muitas vezes cobram uma implementação em quadro negro, ou na
+Entender a variedade deles pode ser fundamental em uma entrevista de
+emprego, por exemplo. Afinal, muitas vezes é cobrado uma implementação em quadro negro ou na
 hora de resolver um problema análogo. E que jeito melhor de entender algo do
 que vendo acontecer?
 
-Por isso no post de hoje vamos implementar 2 algoritimos (e um extra) de
-ordenação: BubbleSort e MergeSort, só que de uma forma que possamos gerar uma
-visualização do progresso deles - o que, se prepare, vai dificultar
-consideravelmente o processo.
+Por isso , no post de hoje, vamos implementar 2 algoritmos (e um extra) de
+**ordenação**: *BubbleSort* e *MergeSort*. Entretanto faremos de modo que possamos visualizar o **progresso** deles - o que vai dificultar o processo de forma considerável.
 
-Vamos fazer isso em javascript usando a *framework* de programação criativa
-**p5.js**, isso pra facilitar o trabalho de criar a janela, desenhar linhas e
-tals. Mas se você já tiver alguma experiencia de programação, pode acompanhar
+Vamos fazer isso em *javascript* usando a *framework* de programação criativa
+**p5.js** - para facilitar o trabalho de criar a janela, desenhar linhas, entre outros. 
+
+• Lembrando: caso já tenha experiência em programação, pode nos acompanhar
 na sua linguagem de preferência.
 
 # Bubble Sort
 
-BubbleSort é muito fácil de implementar. Nele primeiro você compara o primeiro
-item com o próximo, se for maior deve-se trocá-los de lugar. Você repete isso
-até chegar ao final da lista, nesse momento você tem certeza que o último item
-é o maior e por isso não é mais necessário compará-lo, então se volta para o
-primeiro passo, mas parando antes dos items que já estão na posição certa.
-Assim vai, até não ter mais pares para comparar.
+*BubbleSort* é muito fácil de implementar. Nele, de início você **compara** o primeiro
+item com o **seguinte**  e, caso seja maior, deve **trocá-los** de lugar. Você irá repetir o processo
+até chegar ao final da lista e então terá certeza que o último item
+é o maior e por isso não é mais necessário compará-lo. Assim vai, até não ter mais pares para comparar!
 
-Podemos implementar isso em javascript com poucas linhas de código:
+Podemos implementar isso em *javascript* com poucas linhas de código:
 
 ```javascript
 // Ordena a lista com BubbleSort
@@ -49,7 +45,7 @@ function bubble_sort(lista) {
   while (final > 1) {
 
     // Olha todos os items da lista, trocando os errados
-    for (var i = 0; i < final; ++i) {
+    por (var i = 0; i < final; ++i) {
       if (lista[i] > lista[i + 1]) {
         troca(lista, i, i + 1);
       }
@@ -68,8 +64,8 @@ function troca(lista, pos1, pos2) {
 }
 ```
 
-Mas, isso só nos resulta a lista organizada. Se tentarmos visualizar isso com o
-p5.js vai ser super chato:
+Entretanto, isso só nos apresenta a lista **organizada**. Se tentarmos **visualizar** isso com o
+*p5.js* vai ser super chato:
 
 <iframe style="width: 400px; height: 200px; overflow: hidden;" scrolling="no" frameborder="10"
 src="https://editor.p5js.org/eduardommosko@gmail.com/embed/4OqLkrUQ3"></iframe>
@@ -114,11 +110,10 @@ function desenhar(l) {
 }
 ```
 
-Então pra poder realmente ver o que acontece em cada parte do processo, temos
-que fazer de um jeito que dê para mostrar na tela cada operação. No caso do
-BubbleSort isso é bem fácil, já que os loops estão bem ali é só decompor os
-passos para acontecerem um de cada vez. Então vamos criar uma função
-`passo_bubble_sort()` e mover a variável `final` para fora da função, para que
+Para poder ver o que acontece em cada **parte** do processo, temos
+que fazer de um jeito que dê para mostrar na **tela cada operação**. No caso do
+*BubbleSort* isso é bem fácil, visto que é só **decompor** os *loops* para funcionarem um de cada vez. Então vamos **criar** uma **função**
+`passo_bubble_sort()` e mover a variável `final`, para que
 ela mantenha seu valor entre invocações.
 
 
@@ -186,37 +181,33 @@ function draw() {
 }
 ```
 
-Agora dá pra **ver** o quão ineficiente o BubbleSort realmente é. Pega cada
-barrinha e leva pro final comparando uma por uma até o final e aí faz de novo e
-de novo e de novo...
+Agora dá pra **ver** o quão ineficiente o *BubbleSort* realmente é. Leve todas as barras para o final, comparando-as, e repita o processo. 
 
-Certamente tem como fazer melhor que isso né??
+*Certamente tem como fazer melhor que isso, né?*
 
 # MergeSort
 
-Agora entramos no universo do MergeSort, um algoritimo **muito** mais rápido.
-Mas como tudo, isso tem um preço: precisa de **muito** mais memória do que o
-BubbleSort. Enquanto o máximo que aquele usa é uma váriavel temporária, o
-MergeSort (em sua forma básica) precisa de uma segunda lista **inteira** do mesmo
+Agora entramos no universo do *MergeSort*, um algoritimo muito mais **rápido**.
+Mas como tudo, isso tem um preço: é necessário muito mais **memória** do que o
+*BubbleSort*. Enquanto o máximo que ele usa é uma **váriavel temporária**, o
+*MergeSort* (em sua forma básica) precisa de uma segunda lista **inteira** do mesmo
 tamanho da primeira!
 
-Esse algoritimo parte de 2 ideias base: A primeira é que se tivermos 2 listas
-pré-ordenadas podemos mescla-las com (muito) menos comparações do que
-precisáriamos pra ordenar uma lista do mesmo tamanho. Como? Se sabemos que o
-primeiro item das duas listas são os menores que há, só precisamos saber qual
-deles é o mais menor e já teremos **certeza** que esse será o primeiro da lista
-final. A segunda ideia é que cada número em si pode ser considerado uma lista
-de apenas um item, tal qual está **sempre** em ordem.
+Esse algoritmo parte de duas **ideias base**: 
 
-Desses princípios parte a conclusão: se cada número é uma lista, se eu mesclar
-dois deles vou ter uma lista maior, a qual eu vou depois poder mesclar com
-outra, o que me daria uma lista ainda maior. Aí posso mesclar essa e meclar e
-mesclar até que eventualmente vou chegar em uma lista ordenada do tamanho da
-lista original. E já que o tempo para mesclar é tão mais rápido assim, todo
-esse processo ainda vai demorar menos do que ordenar comparando item por item.
+A primeira é que se tivermos duas listas
+*pré-ordenadas*, podemos mesclá-las com **menos comparações** do que
+precisaríamos para ordenar uma lista do mesmo tamanho. Se sabemos que o
+primeiro item de ambas as listas são **os menores**, teremos **certeza** que esse será, também, o primeiro da **lista
+final**. A segunda ideia é que cada número pode ser considerado uma lista
+de apenas **um item**, tal qual está **sempre** em ordem.
 
-A forma mais comum de implementar isso é com uma função recursiva, já que isso
-se encaixa muito bem no problema.
+Desses princípios, parte a seguinte conclusão: se cada número é uma lista, ao mesclar
+dois deles teremos um lista **ainda maior**. Com base nisso, é possível mesclar sucessivamente até chegar em uma lista ordenada do **tamanho da original**. E já que o tempo necessário para mesclar é **menor**, todo
+esse processo vai demorar menos do que ordenar **comparando** item por item.
+
+A forma mais comum de implementar isso é com uma função **recursiva**, já que isso
+se encaixa muito bem no problema:
 
 ```javascript
 var buffer = null;
@@ -236,7 +227,7 @@ function merge_sort(lista, comeco = 0, fim = lista.length) {
     merge_sort(lista, comeco, meio);
     merge_sort(lista, meio, fim);
 
-    // Copia a seção da lista pro buffer
+    // Copia a seção da lista para o buffer
     for (var i = comeco; i < fim; ++i) {
       buffer[i] = lista[i];
     }
@@ -275,16 +266,15 @@ function merge_sort(lista, comeco = 0, fim = lista.length) {
 }
 ```
 
-Mas dessa forma temos o mesmo problema de antes: não podemos visualizar. E
-nesse caso como a implementação é recursiva não é tão óbvio de adaptar.
-Felizmente toda implementação recursiva pode ser traduzida em um loop,
-inclusive com mais eficiência grande parte das vezes. A forma que eu pensei em
-fazer isso é "simulando" a recursividade com uma estrutura de dados de
-**stack** (*pilha*) que guarda uma pilha de estados do processamento, como se
-devemos ordenar ou mesclar. Dessa forma, quando formos ordenar colocamos na
-seção da lista que queremos que seja organizada na pilha, aí e o processamento
-só voltará para a seção atual quando a outra estiver ordenada. Vamos ver isso
-em ação:
+Dessa forma, temos o mesmo problema de antes: não podemos **visualizar**. E,
+nesse caso, como a implementação é **recursiva**, não é tão óbvio de adaptar.
+Felizmente, toda implementação recursiva pode ser traduzida em um *loop*,
+inclusive com mais eficiência. A **melhor** forma de fazer isso é "simulando" a recursividade com uma **estrutura** de dados de
+*stack* que guarda uma pilha de estados do **processamento**. Dessa forma, quando formos ordenar, colocamos na
+seção da lista que queremos, então o processamento
+só voltará para a seção atual quando a outra estiver ordenada. 
+
+Vamos ver isso em ação:
 
 ```javascript
 // Ordena a lista com MergeSort em loop
@@ -292,7 +282,7 @@ function merge_sort_loop(lista, comeco = 0, fim = lista.length) {
   var buffer = [];
   buffer.length = lista.length; // JavaScript ¯\_(ツ)_/¯
 
-  // Cria a stack de partes à serem ordenadas
+  // Cria a stack de partes a serem ordenadas
   var stack = [];
 
   // Manda ordenar a lista inteira
@@ -378,8 +368,8 @@ function ultimo(lista) {
 }
 ```
 
-Mas ainda precisamos adaptar essa versão para acontecer em passos ao invés de
-de uma vez só.
+Mas ainda precisamos **adaptar** essa versão para acontecer em passos ao invés de
+de uma vez só:
 
 ```javascript
 var buffer = null;
@@ -393,7 +383,7 @@ function passo_merge_sort(lista, comeco = 0, fim = lista.length) {
   }
 
   if (stack === null) {
-    // Cria a stack de partes à serem ordenadas
+    // Cria a stack de partes a serem ordenadas
     stack = [];
 
     // Manda ordenar a lista inteira
@@ -462,7 +452,7 @@ function passo_merge_sort(lista, comeco = 0, fim = lista.length) {
 }
 ```
 
-E agora é só colocar no `draw()` e visualizar:
+Agora é só colocar no `draw()` e **visualizar**:
 
 <iframe style="width: 400px; height: 200px; overflow: hidden;" scrolling="no" frameborder="10"
 src="https://editor.p5js.org/eduardommosko@gmail.com/embed/kalsei6o9"></iframe>
@@ -501,22 +491,22 @@ function draw() {
 }
 ```
 
-# Algoritimo EXTRA!
+# Algoritmo EXTRA!
 
-Lembra que no começo do post eu falei que existem algoritimos de ordenação com
-os propósito mais estranhos? Esse é um deles, o **BogoSort**. Ele nunca é usado
-na prática por ser extremamente ineficiente, mas ele é divertido de implementar.
+Lembra que no começo do post eu falei que existem algoritmos de **ordenação** com
+**vários propósitos** diferentes? Esse é um deles, o *BogoSort*. Ele nunca é usado
+na prática - por ser extremamente ineficiente -, mas é divertido de implementar.
 
-Ele parte do princípio que existe *alguma* permutação ordenada dos valores de
-uma lista. Assim se olharmos todas elas, indo de uma a outra aleatóriamente,
+Ele parte do princípio que existe alguma **permutação** ordenada dos valores de
+uma lista. Assim, se olharmos todas elas, indo de uma a outra aleatoriamente,
 uma hora vamos encontrar a ordenada.
 
-A implementação é basicamente assim:
- 1. Se a lista estiver ordenada retorne, se não continue.
- 2. Gere um ordem aleatória de itens.
- 3. Volte para o passo 1.
+A implementação:
+ 1. Se a lista estiver ordenada, retorne - senão, continue;
+ 2. Gere uma ordem aleatória de itens;
+ 3. Volte para o primeiro passo.
 
-Em javascript:
+Em *javascript*:
 
 ```javascript
 // Ordena uma lista com BogoSort
@@ -544,7 +534,7 @@ function esta_ordenada(lista) {
 }
 ```
 
-E obviamente, é bem fácil de adaptar para passos:
+E, obviamente, é bem fácil de **adaptar** para passos:
 
 ```javascript
 // Ordena uma lista com BogoSort
@@ -555,9 +545,9 @@ function passo_bogo_sort(lista) {
 }
 ```
 
-Então vamos visualizar, me manda um print se - por acaso - o algoritimo
-consiguiu ordenar a lista enquanto você lê o post (Se sim, a visualização vai
-ser só a lista ordenada parada).
+Então vamos visualizar! Me manda um print se o algoritmo
+conseguiu ordenar a lista enquanto você lê o post. Se sim, a visualização vai
+ser só a lista ordenada parada.
 
 <iframe style="width: 400px; height: 200px; overflow: hidden;" scrolling="no" frameborder="10"
 src="https://editor.p5js.org/eduardommosko@gmail.com/embed/agbapc1kn"></iframe>
@@ -584,7 +574,19 @@ function draw() {
 }
 ```
 
-Mas então é isso galera. Obrigado por ler, espero que tenha aprendido uma coisa
-ou duas, e até semana que vem. Não se esqueca de se inscrever na newsletter e nos
-apoiar no catarse se achou o conteúdo interessante.
+Por hoje é isso, galera! Obrigado por ler e espero que tenha aprendido uma coisa
+ou duas Até semana que vem!
 
+---
+
+Gostou de aprender sobre isso? Quer aprender mais? 
+
+Considere nos [apoiar no Catarse](https://www.catarse.me/moskoscode), avalie as [recompensas](https://www.catarse.me/moskoscode) e ajude a fortalecer o Moskos' Codefield!
+
+Se quiser, se inscreva na nossa [newsletter](https://moskoscode.com/newsletter) e nos siga nas nossas [redes sociais](https://linktr.ee/moskoscode) para não perder novos posts como esse!
+
+Se gostou, compartilhe! E até amanhã ;)
+
+[Instagram](https://www.instagram.com/moskoscode)
+[Facebook](https://www.facebook.com/moskoscode)
+[Twitter](https://www.twitter.com/moskoscode)
