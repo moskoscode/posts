@@ -85,9 +85,212 @@ Por outro lado, se o trabalho principal dos threads for de IO (entrada/saída de
 dados), como baixar imagens da internet ou ler algo do disco rígido, você pode
 criar muito mais deles com um ganho em performance. Nesse caso, a quantidade
 com maior benefício é mais difícil de determinar do que no caso anterior, já
-que depende do quanto você está usando da CPU, a velocidade de transferência de
-dados da sua internet/disco rígido/memória. Mas que qualquer forma, uma
-quantidade em torno do dobro do número de cores lógicos do seu processador
-ainda deve funcionar bem.
+que depende do quanto você está usando da CPU, da velocidade de transferência
+de dados da sua internet/disco rígido/memória, entre outros. Mas que qualquer
+forma, uma quantidade em torno de o dobro do número de cores lógicos do seu
+processador deve funcionar bem.
+
+Vamos ver isso na prática:
+
+Digamos que temos uma função que faz vários cálculos e ela demora um bom tempo
+pra executar
+
+```cpp
+#include <cstdint>
+#include <iostream>
+
+// Demora cerca de 5 segundos no meu computador
+void umMonteDeCalculos() {
+    for (std::size_t i = 0; i < 10000000000; ++i);
+}
+
+int main() {
+    umMonteDeCalculos();
+    std::cout << "Pronto" << std::endl;
+}
+```
+
+Pra facilitar o exemplo nossa função não faz nada, ela só incrementa um
+contador até 10 bilhões. Só que temos um problema ainda: os compiladores
+modernos são muito espertos e vão perceber que nossa função
+`umMonteDeCalculos()` é besteira e não calcula nada. Por isso que quando
+executamos esse exemplo o tempo que ele demora é tipo 0.
+
+```bash
+$ c++ cputhread.cpp -O3 -pthread && time ./a.out
+Pronto
+
+real    0m0.002s
+user    0m0.002s
+sys     0m0.001s
+```
+
+Precisamos de um jeito para convencer o compilador a manter nosso loop no
+programa. Para isso vamos usar uma técnica de benchmarking que permite dizermos
+precisamente o que não deve ser otimizado, vamos usar um pedaço de *assembly
+volátil* que não faz nada, mas que é indecifrável pro compilador, de forma que
+ele é obrigado a manter o código que leva até ele.
+
+```cpp
+#include <cstdint>
+#include <iostream>
+
+// Garante que um caminho de código exista
+static void naoOtimizar() {
+    asm volatile("" : : : );
+}
+
+// Demora cerca de 5 segundos no meu computador
+void umMonteDeCalculos() {
+    for (std::size_t i = 0; i < 10000000000; ++i) naoOtimizar();
+}
+
+int main() {
+    umMonteDeCalculos();
+    std::cout << "Pronto" << std::endl;
+}
+```
+
+Esse programa sim funciona como o esperado, demora cerca de 5 segundos para
+executar:
+
+```bash
+$ c++ cputhread.cpp -O3 -pthread && time ./a.out
+Pronto
+
+real    0m4.982s
+user    0m4.979s
+sys     0m0.000s
+```
+
+Agora digamos que ao invés de executar apenas uma vez, precisamos rodar essa
+função 4 vezes. Sem threads o tempo de execução escala linearmente, demora 4
+vezes mais, ou seja cerca de 20 segundos
+
+```cpp
+int main() {
+    umMonteDeCalculos();
+    std::cout << "1" << std::endl;
+    umMonteDeCalculos();
+    std::cout << "2" << std::endl;
+    umMonteDeCalculos();
+    std::cout << "3" << std::endl;
+    umMonteDeCalculos();
+    std::cout << "4" << std::endl;
+}
+```
+
+```bash
+$ c++ cputhread.cpp -O3 -pthread && time ./a.out
+1
+2
+3
+4
+
+real    0m19.841s
+user    0m19.815s
+sys     0m0.008s
+```
+
+Mas se implementarmos paralelismo (e seu computador tiver cores o suficientes),
+podemos voltar a demorar apenas 5 segundos pra executar essa mesma quantidade
+de cálculos.
+
+```cpp
+#include <thread>
+
+int main() {
+    std::thread t1 (umMonteDeCalculos);
+    std::thread t2 (umMonteDeCalculos);
+    std::thread t3 (umMonteDeCalculos);
+    std::thread t4 (umMonteDeCalculos);
+
+    t1.join();
+    t2.join();
+    t3.join();
+    t4.join();
+
+    std::cout << "Pronto" << std::endl;
+}
+```
+
+```bash
+$ c++ cputhread.cpp -O3 -pthread && time ./a.out
+Pronto
+
+real    0m5.438s
+user    0m21.587s
+sys     0m0.008s
+```
+
+Então **esse** é o poder dos threads.
+
+Veja que podemos ter essa economia com até no máximo a quantidade de *cores
+lógicos* do processador do usuário. Minha máquina tem 6 deles, então posso usar
+até 6 threads demorando quase o mesmo tempo.
+
+```cpp
+int main() {
+    std::thread t1 (umMonteDeCalculos);
+    std::thread t2 (umMonteDeCalculos);
+    std::thread t3 (umMonteDeCalculos);
+    std::thread t4 (umMonteDeCalculos);
+    std::thread t5 (umMonteDeCalculos);
+    std::thread t6 (umMonteDeCalculos);
+
+    t1.join();
+    t2.join();
+    t3.join();
+    t4.join();
+    t5.join();
+    t6.join();
+
+    std::cout << "Pronto" << std::endl;
+}
+```
+
+```bash
+$ c++ cputhread.cpp -O3 -pthread && time ./a.out
+Pronto
+
+real    0m5.874s
+user    0m33.050s
+sys     0m0.020s
+```
+
+Mas assim que eu passar disso, por 1 thread que seja, a diferença já vai
+aparecer.
+
+```cpp
+int main() {
+    std::thread t1 (umMonteDeCalculos);
+    std::thread t2 (umMonteDeCalculos);
+    std::thread t3 (umMonteDeCalculos);
+    std::thread t4 (umMonteDeCalculos);
+    std::thread t5 (umMonteDeCalculos);
+    std::thread t6 (umMonteDeCalculos);
+    std::thread t7 (umMonteDeCalculos);
+
+    t1.join();
+    t2.join();
+    t3.join();
+    t4.join();
+    t5.join();
+    t6.join();
+    t7.join();
+
+    std::cout << "Pronto" << std::endl;
+}
+```
+
+```bash
+$ c++ cputhread.cpp -O3 -pthread && time ./a.out
+Pronto
+
+real    0m7.178s
+user    0m38.464s
+sys     0m0.024s
+```
+
 
 
