@@ -81,15 +81,6 @@ processador. Mais do que isso e haverá uma tendência para a **degradação** d
 performance, já que os cores vão precisar fazer malabarismo com os threads, o
 que causa custos de mudança de contexto.
 
-Por outro lado, se o trabalho principal dos threads for de IO (entrada/saída de
-dados), como baixar imagens da internet ou ler algo do disco rígido, você pode
-criar muito mais deles com um ganho em performance. Nesse caso, a quantidade
-com maior benefício é mais difícil de determinar do que no caso anterior, já
-que depende do quanto você está usando da CPU, da velocidade de transferência
-de dados da sua internet/disco rígido/memória, entre outros. Mas que qualquer
-forma, uma quantidade em torno de o dobro do número de cores lógicos do seu
-processador deve funcionar bem.
-
 Vamos ver isso na prática:
 
 Digamos que temos uma função que faz vários cálculos e ela demora um bom tempo
@@ -292,5 +283,17 @@ user    0m38.464s
 sys     0m0.024s
 ```
 
+Por outro lado, se o trabalho principal dos threads for de IO (entrada/saída de
+dados), como baixar imagens da internet ou ler algo do disco rígido, você pode
+criar muito mais deles com um ganho em performance. Nesse caso, a quantidade
+com maior benefício é mais difícil de determinar do que no caso anterior, já
+que depende do quanto você está usando da CPU, da velocidade de transferência
+de dados da sua internet/disco rígido/memória, entre outros. Mas que qualquer
+forma, uma quantidade em torno de o dobro do número de cores lógicos do seu
+processador deve funcionar bem.
 
+Vamos dar uma olhada em um exemplo simulado novamente.
 
+````cpp
+
+```
