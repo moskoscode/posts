@@ -295,5 +295,87 @@ processador deve funcionar bem.
 Vamos dar uma olhada em um exemplo simulado novamente.
 
 ````cpp
+#include <thread>
+#include <iostream>
 
+constexpr std::size_t QUANTIDADE = 160;
+
+// Simula o carregamento de uma imagem
+void carregarImagem() {
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(100ms);
+}
+
+int main() {
+    for(std::size_t i = 0; i < QUANTIDADE; ++i) carregarImagem();
+}
 ```
+
+No caso, para carregarmos 160 imagens falsas demoramos cerca de 16 segundos
+
+```bash
+$ c++ main.cpp -O3 -pthread && time ./a.out
+
+real    0m16.027s
+user    0m0.007s
+sys     0m0.001s
+```
+
+Mas nesse caso podemos criar muito mais threads do que temos de verdade e
+ainda teremos uma redução no tempo total.
+
+```cpp
+#include <thread>
+#include <vector>
+#include <iostream>
+
+constexpr std::size_t QUANT_IMAGENS = 160;
+constexpr std::size_t QUANT_THREAD = 16;
+constexpr std::size_t IM_POR_THREAD = QUANT_IMAGENS/QUANT_THREAD;
+
+// Simula o carregamento de uma imagem
+void carregarImagem() {
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(100ms);
+}
+
+// Carrega várias imagens
+void carregarImagens(std::size_t quant) {
+    for(std::size_t i = 0; i < quant; ++i) carregarImagem();
+}
+
+int main() {
+    std::vector<std::thread> threads;
+    threads.reserve(QUANT_THREAD);
+
+    for (std::size_t i = 0; i < QUANT_THREAD; ++i) {
+        threads.push_back(std::thread(carregarImagens, IM_POR_THREAD));
+    }
+
+    for (auto& t : threads) {
+        t.join();
+    }
+}
+```
+
+```bash
+$ c++ main2.cpp -O3 -pthread && time ./a.out
+
+real    0m1.006s
+user    0m0.002s
+sys     0m0.004s
+```
+
+Mas é claro, nesse exemplo você teria que ter uma quantidade absurda de
+threads para o tempo de execução aumentar um pouquinho, isso por que eles
+só estão dormindo, mas no caso de carregar imagens existe o limite da largura
+de banda que determina quantos dados podem passar em um determinado momento.
+Mas ainda assim, esse limite tende a ser bem maior que o determinado pela sua CPU.
+
+Por hoje é isso galera, esse é o básico do básico do multithreading e funciona muito bem enquanto
+seus threads não precisam compartilhar memória. Quando isso acontece, aí é outros quinhentos.
+Existem inúmeros problemas que isso pode causar e diversas soluções. Em breve faremos posts
+detalhando mais sobre isso com mutexes, variáveis atômicas, entre outros. Então não deixe de se
+inscrever na newsletter para não perder. Até semana que vem.
+
+
