@@ -292,7 +292,7 @@ processador deve funcionar bem.
 
 Vamos dar uma olhada em um exemplo simulado novamente:
 
-````cpp
+```cpp
 #include <thread>
 #include <iostream>
 
