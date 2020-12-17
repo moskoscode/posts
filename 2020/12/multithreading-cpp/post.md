@@ -1,22 +1,20 @@
 Já abordamos *multithreading* aqui no blog, mas em **Python**. Um dos grandes
-empecilhos que vimos lá era a *GIL* (Trava Global do Interpretador), que
-impede que mais do que um *thread* interprete código Python a **qualquer** momento.
+empecilhos que vimos lá era a *GIL* (Trava Global do Interpretador), que impede
+que mais do que um *thread* interprete código Python a **qualquer** momento.
 Em C++ **não** temos essa limitação! Mas, para compensar, temos que ser extra
-cuidadosos com nossa **memória**, já que escrever nela ao mesmo tempo que outro
-*thread* a usa pode causar *bugs* bastante nefários.
+cuidadosos com nossa **memória**, já que escrever nela enquanto outro *thread*
+a usa pode causar *bugs* bastante nefários.
 
-Um thread nada mais é do que uma **linha de execução de código** no processador do
-computador. Os primeiros programas que você escreve na sua carreira são,
-provavelmente, *single-threaded* (com um thread único), ou seja, apenas **uma parte
-do código** executa a cada vez. *Multi-threading* (usar threads múltiplos), por
+Um thread nada mais é do que um **caminho de execução de código**. Os primeiros
+programas que você escreve na sua carreira são, provavelmente,
+*single-threaded* (com um thread único), ou seja, apenas **uma parte do
+código** executa a cada vez. *Multi-threading* (usar threads múltiplos), por
 outro lado, permite fazer **diversas** operações **simultaneamente**. Você
-poderia, por exemplo, calcular o processo físico de um jogo ao mesmo tempo que processa as
-ações do jogador, ou ainda carregar várias imagens para processamento ao mesmo
-tempo, ao invés de uma de cada vez.
+poderia, por exemplo, calcular o processo físico de um jogo *ao mesmo tempo*
+que processa as ações do jogador, ou ainda carregar várias imagens juntas, ao
+invés de uma de cada vez.
 
-Para fazer isso em C++, podemos usar o objeto `std::thread` que faz parte da
-**biblioteca padrão**. Ele permite inicializar um novo thread com um *chamável*,
-tipo o endereço de uma função. Vamos ver como funciona:
+Vamos ver os efeitos de usar threads aplicando-nos nesse programa simples:
 
 ```cpp
 #include <iostream>
@@ -33,8 +31,8 @@ int main() {
 }
 ```
 
-Ainda não usamos *threads*, mas isso é para poder comparar melhor como funciona.
-Nesse caso, a mensagem `"Terminado"` vai aparecer só **depois** de apertarmos '*enter*'.
+Nesse caso, a mensagem `"Terminado"` vai aparecer só **depois** de apertarmos
+'*enter*'.
 
 ```bash
 $ g++ main.cpp && ./a.out
@@ -44,6 +42,10 @@ Terminado
 
 Mas, se lançarmos o `espera_enter()` em outro *thread*, vamos ver que a mensagem
 aparece **antes** de apertarmos.
+
+Para fazer isso em C++, podemos usar o objeto `std::thread` que faz parte da
+**biblioteca padrão**. Ele permite inicializar um novo thread com um *objeto
+chamável*, tipo uma função.
 
 ```cpp
 #include <iostream>
@@ -55,10 +57,10 @@ void espera_enter() {
 }
 
 int main() {
-    std::thread t(espera_enter);
+    std::thread t(espera_enter);  // Roda "espera_enter" em outro thread
     std::cout << "Terminado" << std::endl;
 
-    t.join();  // Espera completar
+    t.join();  // Espera o outro thread completar
 }
 ```
 
@@ -70,19 +72,20 @@ $
 ```
 
 Isso acontece porque quando criamos o `std::thread`, o código de
-`espera_enter()` começa **imediatamente** a executar em outra linha - o que não
+`espera_enter()` começa **imediatamente** a executar - de uma forma que não
 interfere na continuidade da função atual. Isso, pelo menos, até chamarmos
-`std::thread::join()`, que **sincroniza** e faz as linhas se **unirem**.
+`std::thread::join()`, que **sincroniza** os threads e faz eles se **unirem**
+em um só.
 
-Teoricamente, podemos criar *threads* ilimitados em **todos** os sistemas operacionais
-modernos, porém, se as funções chamadas tiverem muita carga de **processamento contínuo**, só vale a pena criar um *thread* para cada *core* lógico do
-processador. Mais do que isso e haverá uma tendência para a **degradação** da
-performance, já que os *cores* vão precisar fazer malabarismo com os *threads*, o
-que causa custos de **mudança de contexto**.
-
+Teoricamente, podemos criar *threads* **ilimitados** em todos os sistemas
+operacionais modernos, porém, se as funções chamadas tiverem muita carga de
+**processamento contínuo**, só vale a pena criar um *thread* para cada *core*
+lógico do processador. Mais do que isso e haverá uma tendência para a
+**degradação** da performance, já que os *cores* vão precisar fazer malabarismo
+com os *threads*, o que causa custos de **mudança de contexto**.
 
 Digamos que temos uma função que faz vários cálculos e ela demora um bom tempo
-para **executar**. Vamos ver isso na prática:
+para **executar**:
 
 ```cpp
 #include <cstdint>
@@ -100,10 +103,10 @@ int main() {
 ```
 
 Para facilitar o exemplo, nossa função não faz **nada**, só incrementa um
-**contador** até 10 bilhões. Só que ainda temos um problema: os **compiladores**
-modernos são muito espertos e vão perceber que nossa função
+**contador** até 10 bilhões. Só que ainda temos um problema: os
+**compiladores** modernos são muito espertos e vão perceber que nossa função
 `umMonteDeCalculos()` é besteira e não calcula nada. Por isso que quando
-**executamos** esse exemplo, o tempo que ele leve é 0.
+**executamos** esse exemplo, o tempo que ele leva é 0.
 
 ```bash
 $ c++ cputhread.cpp -O3 -pthread && time ./a.out
@@ -115,10 +118,10 @@ sys     0m0.001s
 ```
 
 Precisamos de um plano para convencer o **compilador** a manter nosso *loop* no
-programa. Para isso vamos usar uma técnica de *benchmarking* que permite estabelecer
-precisamente o que **não deve** ser otimizado. Vamos usar um pedaço de *assembly
-volátil* que não faz nada, mas que é **indecifrável** para o compilador, de forma que
-ele é obrigado a **manter** o código que leva até ele.
+programa. Para isso vamos usar uma técnica de *benchmarking* que permite
+estabelecer precisamente o que **não deve** ser otimizado. Vamos usar um pedaço
+de *assembly volátil* que não faz nada, mas que é **indecifrável** para o
+compilador, de forma que ele é obrigado a **manter** o código que leva até ele.
 
 ```cpp
 #include <cstdint>
@@ -181,9 +184,9 @@ user    0m19.815s
 sys     0m0.008s
 ```
 
-Mas, se implementarmos **paralelismo** (e seu computador tiver *cores* o suficientes),
-pode voltar a levar apenas **5** segundos para executar essa **mesma** quantidade
-de cálculos.
+Mas, se implementarmos **paralelismo** (e seu computador tiver *cores* o
+suficientes), podemos voltar a levar apenas **5** segundos para executar essa
+**mesma** quantidade de cálculos.
 
 ```cpp
 #include <thread>
@@ -212,11 +215,11 @@ user    0m21.587s
 sys     0m0.008s
 ```
 
-Então **esse** é o poder dos *threads*.
+E **esse** é o poder dos *threads*!
 
 Veja que podemos ter essa economia com até no **máximo** a quantidade de *cores
-lógicos* do processador do **usuário**. Minha máquina tem **6** deles, então posso usar
-até 6 *threads*.
+lógicos* do processador do **usuário**. Minha máquina tem **6** deles, então
+posso usar até 6 *threads*.
 
 ```cpp
 int main() {
@@ -281,13 +284,13 @@ user    0m38.464s
 sys     0m0.024s
 ```
 
-Por outro lado, se o trabalho principal dos *threads* for de IO (entrada/saída de
-dados), como baixar imagens da internet ou ler algo do disco rígido, você pode
-criar mais deles com um ganho em **performance**. Nesse caso, a quantidade
+Por outro lado, se o trabalho principal dos *threads* for de IO (entrada/saída
+de dados), como baixar imagens da internet ou ler algo do disco rígido, você
+pode criar mais deles com um ganho em **performance**. Nesse caso, a quantidade
 com maior benefício é mais difícil de determinar do que no caso anterior, já
 que depende do quanto você está usando da CPU, da velocidade de transferência
-de dados da sua internet/disco rígido/memória, entre outros. De qualquer
-forma, uma quantidade em torno de o **dobro** do número de *cores* lógicos do seu
+de dados da sua internet/disco rígido/memória, entre outros. De qualquer forma,
+uma quantidade em torno de o **dobro** do número de *cores* lógicos do seu
 processador deve funcionar bem.
 
 Vamos dar uma olhada em um exemplo simulado novamente:
@@ -309,7 +312,7 @@ int main() {
 }
 ```
 
-No caso, para carregarmos 160 imagens falsas, demoramos cerca de 16 segundos.
+Assim, para carregarmos 160 imagens falsas, demoramos cerca de 16 segundos.
 
 ```bash
 $ c++ main.cpp -O3 -pthread && time ./a.out
@@ -364,20 +367,22 @@ user    0m0.002s
 sys     0m0.004s
 ```
 
-Mas é claro, nesse exemplo você teria que ter uma quantidade absurda de
-*threads* para o tempo de execução aumentar um pouquinho - isso porque eles
-só estão "dormindo", mas, no caso de carregar imagens, existe o limite da largura
-de banda que determina quantos dados podem passar em um determinado momento.
-Mas, ainda assim, esse limite tende a ser bem **maior** que o determinado pela sua CPU.
+Mas é claro, nesse exemplo você poderia ter uma quantidade absurda de *threads*
+e o tempo de execução só aumentaria um pouquinho - isso porque eles só estão
+"dormindo", mas, no caso de carregar imagens, existe o limite da largura de
+banda que determina quantos dados podem passar em um determinado momento. Mas,
+ainda assim, esse limite tende a ser bem **maior** que o determinado pela sua
+CPU.
 
-Por hoje é isso, galera! Esse é o básico do básico do multithreading e funciona muito bem enquanto
-seus *threads* não precisam **compartilhar** memória. Quando isso acontece, aí são outros quinhentos.
-Existem inúmeros problemas que isso pode causar e diversas soluções. Em breve, faremos posts
-detalhando mais sobre isso com mutexes, variáveis atômicas, entre outros. Até semana que vem!
+Por hoje é isso, galera! Esse é o básico do básico do multithreading e funciona
+muito bem enquanto seus *threads* não precisam **compartilhar** memória. Quando
+isso acontece, aí são outros quinhentos. Em breve, faremos posts detalhando
+mais sobre isso com mutexes, variáveis atômicas, entre outros. Até semana que
+vem!
 
 ---
 
-Gostou de aprender sobre isso? Quer aprender mais? 
+Gostou de aprender sobre isso? Quer aprender mais?
 
 Considere nos [apoiar no Catarse](https://www.catarse.me/moskoscode), avalie as [recompensas](https://www.catarse.me/moskoscode) e ajude a fortalecer o Moskos' Codefield!
 
