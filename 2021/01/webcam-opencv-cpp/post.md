@@ -104,3 +104,17 @@ Então é isso por hoje! Bem simples, né?
 Um ótimo desafio será conseguir fazer com que o app tire uma foto quando você apertar `f`! Uma dica para isso é usar a função `cv::waitKey()`, que retorna qual tecla foi **pressionada** no intervalo. Após isso, você vai precisar **adicionar** `-lopencv_imgcodecs` no comando de compilação quando for **salvar** a imagem.
 
 Espero que você tenha aprendido uma coisa ou duas nesse tutorial! Até semana que vem.
+
+---
+
+Gostou de aprender sobre isso? Quer aprender mais? 
+
+Considere nos [apoiar no Catarse](https://www.catarse.me/moskoscode), avalie as [recompensas](https://www.catarse.me/moskoscode) e ajude a fortalecer o Moskos' Codefield!
+
+Se quiser, se inscreva na nossa [newsletter](https://moskoscode.com/newsletter) e nos siga nas nossas [redes sociais](https://linktr.ee/moskoscode) para não perder novos posts como esse!
+
+Se gostou, compartilhe! E até amanhã ;)
+
+[Instagram](https://www.instagram.com/moskoscode)
+[Facebook](https://www.facebook.com/moskoscode)
+[Twitter](https://www.twitter.com/moskoscode)
