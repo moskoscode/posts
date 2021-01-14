@@ -57,4 +57,91 @@ int min(int a, int b) {
 }
 ```
 
-Legal, conseguimos deixar bem pior de entender o que ela faz, agora se deixamos mais rápido mesmo só vamos saber se medirmos a performance.
+Legal, conseguimos deixar bem pior de entender o que ela faz, agora se deixamos mais rápido mesmo só vamos saber se medirmos a performance. Não vou entrar à fundo nisso aqui, mas os resultados em uma compilação otimizada (O3) são esses:
+
+![com ramos demora o mesmo tempo que sem ramos](grafico1.png)
+
+***Como assim?? Achei que programação sem ramos era pra ser mais rápida!***
+
+Pois é, como eu disse antes: seu compilador é muito esperto. Ele conseguiu perceber nos dois casos o que estávamos tentando fazer (retornar o menor dentre dois números) e disse "Opa, eu sei um jeito mais rápido de fazer isso", aí ambos foram compilados para *exatamente* o mesmo código de máquina. Se você não acredita, pode tentar repetir o benchmark. Esse é o [link](https://www.quick-bench.com/q/vlPZrMDjzshohwwLVVFoV-fVph) e tá aqui o código:
+
+```cpp
+// A vai ser menor cerca de metade das vezes
+int min_com_ramos(int a, int b) {
+	if (a < b)
+		return a;
+	else
+		return b;
+}
+
+// A vai ser menor cerca de metade das vezes
+int min_sem_ramos(int a, int b) {
+	return a * (a < b) + b * !(a < b);
+}
+
+static void com_ramos(benchmark::State& state) {
+  int i = 0;
+  for (auto _ : state) {
+    ++i;
+    int a = i;
+    int b = a + (i%2)*(-2) + 1;
+
+    int res = min_com_ramos(a, b);
+    benchmark::DoNotOptimize(res);
+  }
+}
+BENCHMARK(com_ramos);
+
+static void sem_ramos(benchmark::State& state) {
+  int i = 0;
+  for (auto _ : state) {
+    ++i;
+    int a = i;
+    int b = a + (i%2)*(-2) + 1;
+
+    int res = min_sem_ramos(a, b);
+    benchmark::DoNotOptimize(res);
+  }
+}
+BENCHMARK(sem_ramos);
+```
+
+
+Os casos que branchless realmente leva à algum ganho na performance são muito específicos. O melhor mesmo, ainda mais se você for iniciante, é confiar que seu compilador vai fazer essas micro otimizações por você e se concentrar em usar as melhores estruturas de dados e algorítimos para cada ocasião e tentar usar algo como [design orientado à dados](https://moskoscode.com/o-super-veloz-design-orientado-a-dados/) quando possível.
+
+Com esses avisos fora do caminho, vamos ver um caso muito legal que programação branchless realmente consegue aumentar a performance!
+
+Você já digitou seu nome de usuário em algum site, mas incomodamente ele não conseguiu identificar por que você colocou alguma letra maiúscula? Um saco né? A função que vamos fazer poderia ter sido usada para evitar esse erro. É uma função `para_minuscula(char* str)` que transforma letras maiúsculas em minúsculas sem afetar o restante dos caracteres. O jeito mais simples de implementar isso provavelmente seria assim:
+
+```cpp
+void para_minusculas(char* texto) {
+	// Faça até chegarmos no fim da string
+    for (; *texto != '\0'; ++texto) {
+    	// Se o caractere for uma letra maiúscula
+        if (*texto >= 'A' && *texto <='Z') {
+        	// Transforme ela em minúscula
+            *texto += 'a' - 'A';
+        }
+    }
+}
+```
+
+Como você pode ver temos um ramos que opera se o caractere for uma letra maiúscula, outro quando não for. Se qualquer caractere do ASCII for considerado uma entrada válida, a probabilidade de cada ramo é de aproximadamente 20% para letras maiúsculas e 80% para outros, uma chance baixa de acerto para o prevedor de ramos. Ao mesmo tempo também parece ser uma função complexa o suficiente para que o compilador não consiga otimizar totalmente. Uma ótima candidata para tentarmos aplicar programação branchless. Ficaria assim:
+
+```cpp
+void para_minusculas(char* texto) {
+	// Faça até chegarmos no fim da string
+    for (; *texto != '\0'; ++texto) {
+        // se for uma letra maiúscula transforme-a em minúscula
+        *texto += ( (*texto >= 'A' && *texto <='Z') * ('a' - 'A') );
+    }
+}
+```
+
+E agora, rufem os tambores....
+
+
+![](grafico2.png)
+
+Quase 4x mais rápido do que a versão com ramos, isso que é um raminho de nada, imagina se fosse algo super rebuscado.
+
