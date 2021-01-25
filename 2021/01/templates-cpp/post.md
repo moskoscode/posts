@@ -41,7 +41,7 @@ clamp(3, 1, 10);  // Retorna 3
 clamp("correr", "aaa", "bbb");  // Falha de compilação
 ```
 
-Essa é a base dos templates, mas eles são muito mais poderosos. Se estiver interessado, dê uma olhada no nosso post sobre `stack_string` que são um tipo especial de string que eu desenvolvi que tem alocação na stack e permite formatação com o tamanho determinado em tempo de compilação - tudo isso usando templates e um pouco de constexpr.
+Essa é a base dos templates, mas eles são muito mais poderosos. Se estiver interessado, dê uma olhada no nosso post sobre [`stack_string`](https://moskoscode.com/strings-na-stack-em-cpp/) que são um tipo especial de string que eu desenvolvi que tem alocação na stack e permite formatação com o tamanho determinado em tempo de compilação - tudo isso usando templates e um pouco de constexpr.
 
 Espero que tenha aprendido uma coisa ou duas e até semana que vêm!
 
