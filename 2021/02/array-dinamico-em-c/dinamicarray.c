@@ -4,12 +4,14 @@
 #include <malloc.h>
 #include <memory.h>
 
+
 typedef struct Array {
 	size_t capacity;
 	size_t size;
 	size_t item_size;
 	void*  buffer;
 } Array;
+
 
 void _Array_realloc(Array* arr, size_t target_capacity) {
 	if (arr->size > target_capacity)
@@ -57,8 +59,12 @@ void* Array_get(Array* arr, size_t index) {
 }
 
 void Array_remove(Array* arr, size_t index) {
-}
+	if (index >= arr->size) return;
 
+	char* dest = ((char*) arr->buffer) + (index * arr->item_size);
+	memcpy(dest, dest + arr->item_size, arr->size * arr->item_size - index * arr->item_size);
+	arr->size--;
+}
 
 inline Array newArray(size_t item_size) {
 	Array arr;
@@ -71,11 +77,18 @@ int main() {
 	Array ints = newArray(sizeof(int));
 	printf("Array starts with %zu ints\n", ints.size);
 
-	for (int i = 0; i < 5; ++i)
-		Array_add(&ints, &i);
+	for (size_t i = 0; i < 15; ++i) {
+		int temp = rand() % 100;
+		Array_add(&ints, &temp);
+	}
+
+	Array_remove(&ints, 3);
 
 	printf("Array now has %zu ints\n", ints.size);
 
-	for (int i = 0; i < 5; ++i)
-		Array_add(&ints, &i);
+	for (size_t i = 0; i < ints.size; ++i)
+		printf("Index %zu is %i\n", i, *(int*) Array_get(&ints, i));
+
+
 }
+
