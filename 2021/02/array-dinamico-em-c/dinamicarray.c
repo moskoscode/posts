@@ -1,31 +1,26 @@
 #include <stddef.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
 
 
+// Dinamic Array struct
 typedef struct Array {
-	size_t capacity;
-	size_t size;
-	size_t item_size;
-	void*  buffer;
+	size_t capacidade;
+	size_t tamanho;
+	size_t item_tamanho;
+	uint8_t*  buffer;
 } Array;
 
 
-void _Array_realloc(Array* arr, size_t target_capacity) {
-	if (arr->size > target_capacity)
-		printf("ERROR: Can't target_capacity %zu cannot be less than Array.size %zu", target_capacity, arr->size);
+void _Array_realloc(Array* arr, size_t target_capacidade) {
+	if (arr->tamanho > target_capacidade)
+		printf("ERROR: Can't target_capacidade %zu cannot be less than Array.tamanho %zu", target_capacidade, arr->tamanho);
 
-	if (arr->buffer == NULL) {
-		arr->buffer = malloc(target_capacity * arr->item_size);
-		arr->capacity = target_capacity;
-
-	} else {
-		arr->buffer = realloc(arr->buffer, target_capacity * arr->item_size);
-		arr->capacity = target_capacity;
-
-	}
+	arr->buffer = realloc(arr->buffer, target_capacidade * arr->item_tamanho);
+	arr->capacidade = target_capacidade;
 
 	if (arr->buffer == NULL) {
 		printf("ERROR: Couldn't allocate enough memory");
@@ -33,49 +28,48 @@ void _Array_realloc(Array* arr, size_t target_capacity) {
 	}
 }
 
-void Array_init(Array* arr, size_t item_size) {
-	arr->capacity = 0;
-	arr->size = 0;
-	arr->item_size = item_size;
+void Array_init(Array* arr, size_t item_tamanho) {
+	arr->capacidade = 0;
+	arr->tamanho = 0;
+	arr->item_tamanho = item_tamanho;
 	arr->buffer = NULL;
 }
 
+void Array_deinit(Array* arr) {
+	free(arr->buffer);
+}
+
 void Array_add(Array* arr, const void* item) {
-	if (arr->capacity == 0) {
+	if (arr->capacidade == 0) {
 		_Array_realloc(arr, 2);
 
-	} else if (arr->size == arr->capacity) {
-		_Array_realloc(arr, 2 * arr->size);
+	} else if (arr->tamanho == arr->capacidade) {
+		_Array_realloc(arr, 2 * arr->tamanho);
 
 	}
 
-	memcpy(((char*) arr->buffer) + (arr->size++ * arr->item_size), item, arr->item_size);
+	memcpy(arr->buffer + arr->tamanho++ * arr->item_tamanho, item, arr->item_tamanho);
 }
 
 void* Array_get(Array* arr, size_t index) {
-	if (index >= arr->size) return NULL;
+	if (index >= arr->tamanho) return NULL;
 
-	return ((char*) arr->buffer) + (index * arr->item_size);
+	return arr->buffer + index * arr->item_tamanho;
 }
 
 void Array_remove(Array* arr, size_t index) {
-	if (index >= arr->size) return;
+	if (index >= arr->tamanho) return;
 
-	char* dest = ((char*) arr->buffer) + (index * arr->item_size);
-	memcpy(dest, dest + arr->item_size, arr->size * arr->item_size - index * arr->item_size);
-	arr->size--;
+	uint8_t* dest = arr->buffer + index * arr->item_tamanho;
+	memcpy(dest, dest + arr->item_tamanho, arr->tamanho * arr->item_tamanho - index * arr->item_tamanho);
+	arr->tamanho--;
 }
-
-inline Array newArray(size_t item_size) {
-	Array arr;
-	Array_init(&arr, item_size);
-	return arr;
-}
-
 
 int main() {
-	Array ints = newArray(sizeof(int));
-	printf("Array starts with %zu ints\n", ints.size);
+	Array ints;
+	Array_init(&ints, sizeof(int));
+
+	printf("Array starts with %zu ints\n", ints.tamanho);
 
 	for (size_t i = 0; i < 15; ++i) {
 		int temp = rand() % 100;
@@ -83,12 +77,14 @@ int main() {
 	}
 
 	Array_remove(&ints, 3);
+	Array_remove(&ints, 10);
+	Array_remove(&ints, 12);
 
-	printf("Array now has %zu ints\n", ints.size);
+	printf("Array now has %zu ints\n", ints.tamanho);
 
-	for (size_t i = 0; i < ints.size; ++i)
+	for (size_t i = 0; i < ints.tamanho; ++i)
 		printf("Index %zu is %i\n", i, *(int*) Array_get(&ints, i));
 
-
+	Array_deinit(&ints);
 }
 
