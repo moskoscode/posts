@@ -225,8 +225,21 @@ Array agora tem 8 ints, que são: [83, 86, 77, 15, 93, 35, 86, 92]
 
 Espero que você tenha se divertido com esse post e aprendido uma coisa ou duas. Deixo um desafio para vocês: **criar uma função que consiga remover um item do *array* com base na posição dele**. Uma implementação possível está lá no fim do post. Deixe um comentário se tiver conseguido resolver sem ver a solução! Até semana que vem!
 
+---
 
+Gostou de aprender sobre isso? Quer aprender mais? 
 
+Considere nos [apoiar no Catarse](https://www.catarse.me/moskoscode), avalie as [recompensas](https://www.catarse.me/moskoscode) e ajude a fortalecer o Moskos' Codefield!
+
+Inscreva-se na nossa [newsletter](https://moskoscode.com/newsletter) e nos siga nas nossas [redes sociais](https://linktr.ee/moskoscode) para não perder novos posts como esse!
+
+Se gostou, compartilhe! E até mais!
+
+[Instagram](https://www.instagram.com/moskoscode)
+[Facebook](https://www.facebook.com/moskoscode)
+[Twitter](https://www.twitter.com/moskoscode)
+
+---
 
 Implementação possível de `Array_remove`
 ```c
@@ -252,17 +265,3 @@ void Array_remove(Array* arr, size_t index) {
     arr->tamanho--;
 }
 ```
-
----
-
-Gostou de aprender sobre isso? Quer aprender mais? 
-
-Considere nos [apoiar no Catarse](https://www.catarse.me/moskoscode), avalie as [recompensas](https://www.catarse.me/moskoscode) e ajude a fortalecer o Moskos' Codefield!
-
-Inscreva-se na nossa [newsletter](https://moskoscode.com/newsletter) e nos siga nas nossas [redes sociais](https://linktr.ee/moskoscode) para não perder novos posts como esse!
-
-Se gostou, compartilhe! E até mais!
-
-[Instagram](https://www.instagram.com/moskoscode)
-[Facebook](https://www.facebook.com/moskoscode)
-[Twitter](https://www.twitter.com/moskoscode)
