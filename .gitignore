@@ -1,0 +1,7 @@
+*.backup
+*.out
+.clangd/
+.idea/
+*.swp
+*.cpp
+*.json
