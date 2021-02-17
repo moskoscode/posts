@@ -1,27 +1,31 @@
 # Uma brevíssima introdução/referência para Lua
 
-Lua é uma linguagem de programação que comecei a usar semana passada. Ela é muito simples e me lembra de python, só que muito menor. O post de hoje é em parte uma introdução à linguagem e em parte uma pequena referência de sintaxe para aqueles, que como eu, estão começando a aprender sobre ela.
+**Lua** é uma linguagem de programação que comecei a usar na semana passada. Ela é muito simples e me lembra Python, só que muito **menor**. O post de hoje é em parte uma introdução à linguagem e em parte uma pequena referência de sintaxe para aqueles que, assim como eu, estão começando a aprender sobre ela.
 
-Primeiro de tudo, como instalar? Lua é distribuída em pacotes de código fonte (tarball) que devem ser compilados. Felizmente ela é escrita em ANSI C puro, sem dependências, então pode ser compilada em qualquer sistema com um compilador C. Você pode baixar o código fonte [aqui](https://www.lua.org/ftp/), se você estiver no windows vai precisar de um software como [7zip](https://www.7-zip.org/) para descompactar.
+***Como instalar?*** 
 
-Para aqueles de nós que não são tão chegados em compilar software, podemos baixar arquivos binários dos repositórios de (quase) todos os sistemas operacionais existentes. Se você estiver usando linux/BSD, use o comando que você normalmente usa para instalar as coisas. No mac você pode usar [MacPorts](https://www.macports.org/) ou [HomeBrew](https://brew.sh/). E no Windows você pode usar o [Subsistema do Windows para Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10), [Cygwin](https://www.cygwin.com/) ou [Chocolatey](https://chocolatey.org/packages?q=lua).
+Lua é distribuída em pacotes de **código fonte** (*tarball*) que devem ser compilados. Felizmente ela é escrita em ANSI C puro, sem dependências. Por isso pode ser compilada em **qualquer** sistema com um **compilador C**. 
 
-Agora que está tudo devidamente instalado podemos começar a programar. Primeiro de tudo o clássico "Hello, World!":
+• Você pode baixar o código fonte [aqui](https://www.lua.org/ftp/). Lembrando que, caso você esteja no Windows, vai precisar de um software como [7zip](https://www.7-zip.org/) para **descompactar**.
+
+Para aqueles que não são muito chegados em compilar software, podemos baixar **arquivos binários** dos repositórios de (quase) todos os sistemas operacionais existentes. Se você estiver usando **Linux/BSD**, use o comando que normalmente é utilizado para fazer as instalações. No **Mac**, por exemplo, você pode usar [MacPorts](https://www.macports.org/) ou [HomeBrew](https://brew.sh/). Já no Windows, o [Subsistema do Windows para Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10), [Cygwin](https://www.cygwin.com/) ou [Chocolatey](https://chocolatey.org/packages?q=lua) são ótimas opções.
+
+Agora que está tudo devidamente instalado podemos começar a programar! Vamos dar início com o clássico "Hello, World!":
 
 ```lua
 print("Hello, World!")
 ```
 
-Muito fácil né? A linguagem inteira é assim.
+Muito fácil, né? A linguagem **inteira** é assim.
 
-Para rodar podemos salvar isso em um aquivo `.lua` e rodar com
+Após dar início, podemos salvar isso em um aquivo `.lua` e rodar com
 
 ```bash
 $ lua main.lua
 Hello, World!
 ```
 
-Comentários são partes do arquivo que são totalmente ignoradas pelo interpretador e são feitos com `--` para uma linha, comentários de múltiplas linhas podem ser feitos com ``--[[ comentário ]]--`.
+Comentários são partes do arquivo que são **totalmente** ignoradas pelo **interpretador** e são feitos com `--` para uma linha - comentários de múltiplas linhas podem ser feitos com ``--[[ comentário ]]--`.
 
 ```lua
 print("Hello, World!")  -- Isso é um comentário
@@ -34,14 +38,14 @@ print("Hello, World!")  -- Isso é um comentário
 print("Tchau, Mundo!")  -- O interpretador só vê os "print"s
 ```
 
-Agora vamos criar umas variáveis. Lua tem duas categorias delas: local e global. Por padrão as variáveis são globais e você deve especificar `local` para torná-las locais.
+Agora vamos criar algumas **variáveis**. Lua tem duas categorias delas: **local** e **global**. Por padrão, as variáveis são **globais** e você deve especificar `local` para torná-las **locais**.
 
 ```lua
 i = 10        -- Variável global
 local j = 20  -- Variável local
 ```
 
-No geral variáveis locais são consideradas de melhor estilo, já que só são visíveis para o escopo atual (função, módulo, loop) e por isso dificultam que alguma alteração inesperada seja feita à ela. Além disso variáveis locais são marginalmente mais rápidas. Para facilitar a questão de escopo vamos ver esse exemplo:
+No geral, variáveis **locais** são melhores, já que são visíveis somente para o **escopo atual** (função, módulo, loop), e por isso dificultam que alguma alteração inesperada seja feita à ela. Além disso, elas são marginalmente **mais rápidas**. Para facilitar a questão de escopo vamos ver esse exemplo:
 
 ```lua
 local var1 = "Escopo de módulo"   -- Só é visível nesse módulo (arquivo)
@@ -59,7 +63,7 @@ print(var3)  -- Não Funciona
 print(var4)  -- Funciona
 ```
 
-Os operadores matemáticos são os mesmos de outras linguagens: `+, -, / e *`. Não existem operadores de mudar o valor de uma variável no lugar, como `+=` ou `++`. O operador mais diferente é o de concatenar texto: `..`
+Os **operadores matemáticos** são os **mesmos** de outras linguagens: `+, -, / e *`. Não existem operadores para mudar o valor de uma variável no lugar, como `+=` ou `++`. O operador mais diferente é o de **concatenar** texto: `..`
 
 ```lua
 -- Operadores matemáticos
@@ -75,7 +79,7 @@ print("1 + 2 é " .. 1 + 2)  -- 1 + 2 é 3
 
 ```
 
-As funções são muito simples também, basta colocar `function` e o nome da função, você pode aceitar parâmetros colocando os nomes entre os parenteses e deve terminar com `end`. Valores são retornados com `return`, uma função que não retorna um valor é avaliada como `nil` (não existente)
+As funções também são muito simples. Basta colocar `function` e o **nome** da função - você pode **aceitar** parâmetros colocando os nomes entre os parênteses e deve **finalizar** com `end`. Valores são **retornados** com `return`, já uma função que **não retorna um valor** é avaliada como `nil` (não existente). Vejamos no exemplo a seguir:
 
 ```lua
 function minhaFuncao()
@@ -91,7 +95,7 @@ local var2 = somar(10, 5)   -- 15
 ```
 
 
-Controle de fluxo é feito com `if ... then ... end`
+O **controle de fluxo** é feito com `if ... then ... end`:
 
 ```lua
 local idade = 19
@@ -108,7 +112,7 @@ else
 end
 ```
 
-No caso do programa acima provavelmente faz mais sentido perguntar para o usuário a idade dele, podemos fazer isso usando o módulo `io` de entrada/saída de dados.
+No caso do programa acima, faz mais sentido **perguntar para o usuário** a **idade** dele. Podemos fazer isso usando o módulo `io` de **entrada/saída** de **dados**.
 
 ```lua
 print("Qual a sua idade?")
@@ -126,9 +130,9 @@ else
 end
 ```
 
-Outros módulos incluem `math` para cálculos matemáticos, `string` para operações com strings, `os` para fazer interface com o sistema operacional e `table` para fazer operações em tabelas.
+Outros módulos incluem `math` para **cálculos matemáticos**, `string` para **operações** com ***strings***, `os` para fazer **interface** com o **sistema operacional** e `table` para fazer **operações em tabelas**.
 
-Falando em tabelas, elas são a única estrutura de dados disponível em Lua! Nem arrays existem, até eles são substituídos por essa tabela. Elas são parecidas com os objetos de javascript ou os dicts de python e são implementadas com uma [tabela de hash](https://moskoscode.com/hashtables-em-c/).
+Falando em tabelas, elas são a **única** estrutura de dados disponível em Lua. Nem *arrays* existem, até eles são substituídos por essa tabela. Elas são parecidas com os objetos de *javascript* ou os dicts de Python e são implementadas com uma [tabela de hash](https://moskoscode.com/hashtables-em-c/).
 
 ```lua
 local tabela = {}  -- cria uma tabela vazia
@@ -144,7 +148,7 @@ print(tabela["nome"])  -- Imprime "Nome"
 print(tabela.string)  -- Imprime "Tabela"
 ```
 
-Como mencionei antes, também é possível usá-las como lista. Mas preste atenção, em lua as listas são indexadas começando pelo número 1.
+Como mencionei antes, também é possível usá-las como **listas**. Mas preste atenção: em Lua, as listas são **indexadas** começando pelo número 1.
 
 ```lua
 local lista = {}
@@ -157,7 +161,7 @@ print(lista[1])  -- Um
 print(lista[3])  -- Três
 ```
 
-Mas é claro, como a lista é uma hashtable, nada impede de você implementar seu próprio `insert` que começa no 0, porém isso vai fugir das convenções da linguagem e pode apresentar problemas quando trabalhando com bibliotecas.
+• **Lembrando**: como a lista é uma *hashtable*, nada te impede de implementar seu próprio `insert`, que começa no 0. Porém isso foge das convenções da linguagem e pode vir a apresentar problemas ao trabalhar com **bibliotecas**.
 
 ```lua
 function insert(lista, item)
@@ -178,11 +182,11 @@ print(lista[1])  -- Dois
 print(lista[3])  -- Quatro
 ```
 
-Nesse caso mesmo já encontrei problemas, é necessário contar manualmente quantos itens existem na tabela já que o jeito integrado à Lua de fazer isso (`#lista`) considera que o primeiro item vai estar no 1.
+Nesse mesmo caso eu já encontrei problemas, pois é necessário contar **manualmente** quantos itens existem na tabela, visto que o recurso integrado à Lua para essa função (`#lista`) considera que o **primeiro item** vai estar no "1".
 
-E a última coisa que vamos ver hoje, mas não menos importante: loops! Lua, como a maior parte das linguagens de programação tem 3 deles: `while`, `for` e `repeat`.
+E por último, mas não menos importante, vamos aprender sobre **loops**. Lua, como a maior parte das linguagens de programação, tem **três** deles: `while`, `for` e `repeat`.
 
-O `while` e o `repeat` são muito parecidos, já que eles repetem enquanto um condição for verdadeira. A diferença é que o `while` repete se uma condição for verdadeira no começo e o `repeat` repete se a condição for **falsa** no final.
+O `while` e o `repeat` são muito parecidos, já que eles **repetem** enquanto uma condição for **verdadeira**. A diferença é que o `while` repete se uma condição for **verdadeira no começo** e o `repeat` repete se a condição for **falsa no final**.
 
 ```lua
 local i = 0
@@ -222,7 +226,7 @@ Resultado:
 ]]--
 ```
 
-Já o `for` pode ser usado para iterar sobre uma tabela, ou para contar de um valor até outro
+Já o `for` pode ser usado para **iterar** sobre uma tabela, ou para **contar** de um valor até outro, como no exemplo a seguir:
 
 ```
 tabela = {5, 3, 6, 2, 6}
@@ -283,4 +287,18 @@ Res:
 ```
 
 
-Então é esse o básico do básico de Lua, uma linguagem que achei muito legal pela sua simplicidade. Espero ter conseguido te mostrar o porquê. Até semana que vêm com mais um post aqui no Moskos' CodeField.
+Então esse é o básico do básico de Lua! Uma linguagem que achei muito legal, principalmente pela sua simplicidade. Espero ter conseguido te mostrar o porquê. Até semana que vêm com mais um post aqui no Moskos' CodeField.
+
+---
+
+Gostou de aprender sobre isso? Quer aprender mais? 
+
+Considere nos [apoiar no Catarse](https://www.catarse.me/moskoscode), avalie as [recompensas](https://www.catarse.me/moskoscode) e ajude a fortalecer o Moskos' Codefield!
+
+Inscreva-se na nossa [newsletter](https://moskoscode.com/newsletter) e nos siga nas nossas [redes sociais](https://linktr.ee/moskoscode) para não perder novos posts como esse!
+
+Se gostou, compartilhe! E até mais!
+
+[Instagram](https://www.instagram.com/moskoscode)
+[Facebook](https://www.facebook.com/moskoscode)
+[Twitter](https://www.twitter.com/moskoscode)
