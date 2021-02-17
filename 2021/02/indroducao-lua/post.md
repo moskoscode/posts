@@ -75,3 +75,212 @@ print("1 + 2 é " .. 1 + 2)  -- 1 + 2 é 3
 
 ```
 
+As funções são muito simples também, basta colocar `function` e o nome da função, você pode aceitar parâmetros colocando os nomes entre os parenteses e deve terminar com `end`. Valores são retornados com `return`, uma função que não retorna um valor é avaliada como `nil` (não existente)
+
+```lua
+function minhaFuncao()
+	print("Olá, da minha função")
+end
+
+function somar(a, b)
+	return a + b
+end
+
+local var1 = minhaFuncao()  -- nil
+local var2 = somar(10, 5)   -- 15
+```
+
+
+Controle de fluxo é feito com `if ... then ... end`
+
+```lua
+local idade = 19
+
+if idade >= 18 and idade < 60 then
+	print("Você é obrigado a votar!")
+
+elseif idade >= 16 then
+	print("Você pode votar, se quiser.")
+
+else
+	print("Você não pode votar :(")
+
+end
+```
+
+No caso do programa acima provavelmente faz mais sentido perguntar para o usuário a idade dele, podemos fazer isso usando o módulo `io` de entrada/saída de dados.
+
+```lua
+print("Qual a sua idade?")
+local idade = io.read("*n")  -- Lê um número
+
+if idade >= 18 and idade < 60 then
+	print("Você é obrigado a votar!")
+
+elseif idade >= 16 then
+	print("Você pode votar, se quiser.")
+
+else
+	print("Você não pode votar :(")
+
+end
+```
+
+Outros módulos incluem `math` para cálculos matemáticos, `string` para operações com strings, `os` para fazer interface com o sistema operacional e `table` para fazer operações em tabelas.
+
+Falando em tabelas, elas são a única estrutura de dados disponível em Lua! Nem arrays existem, até eles são substituídos por essa tabela. Elas são parecidas com os objetos de javascript ou os dicts de python e são implementadas com uma [tabela de hash](https://moskoscode.com/hashtables-em-c/).
+
+```lua
+local tabela = {}  -- cria uma tabela vazia
+
+-- É possível acessar os items com .
+tabela.nome = "Nome"
+
+-- Ou com chaves, para chaves de string/número
+tabela["string"] = "String"
+
+-- Esses modos são trocáveis
+print(tabela["nome"])  -- Imprime "Nome"
+print(tabela.string)  -- Imprime "Tabela"
+```
+
+Como mencionei antes, também é possível usá-las como lista. Mas preste atenção, em lua as listas são indexadas começando pelo número 1.
+
+```lua
+local lista = {}
+table.insert(lista, "Um")
+table.insert(lista, "Dois")
+table.insert(lista, "Três")
+table.insert(lista, "Quatro")
+
+print(lista[1])  -- Um
+print(lista[3])  -- Três
+```
+
+Mas é claro, como a lista é uma hashtable, nada impede de você implementar seu próprio `insert` que começa no 0, porém isso vai fugir das convenções da linguagem e pode apresentar problemas quando trabalhando com bibliotecas.
+
+```lua
+function insert(lista, item)
+	local tamanho = 0
+	for k, v in pairs(lista) do
+		tamanho = tamanho + 1
+	end
+	lista[tamanho] = item
+end
+
+local lista = {}
+insert(lista, "Um")
+insert(lista, "Dois")
+insert(lista, "Três")
+insert(lista, "Quatro")
+
+print(lista[1])  -- Dois
+print(lista[3])  -- Quatro
+```
+
+Nesse caso mesmo já encontrei problemas, é necessário contar manualmente quantos itens existem na tabela já que o jeito integrado à Lua de fazer isso (`#lista`) considera que o primeiro item vai estar no 1.
+
+E a última coisa que vamos ver hoje, mas não menos importante: loops! Lua, como a maior parte das linguagens de programação tem 3 deles: `while`, `for` e `repeat`.
+
+O `while` e o `repeat` são muito parecidos, já que eles repetem enquanto um condição for verdadeira. A diferença é que o `while` repete se uma condição for verdadeira no começo e o `repeat` repete se a condição for **falsa** no final.
+
+```lua
+local i = 0
+
+while i < 10 do  -- Enquanto i for menor que 10
+	print(i)
+	i = i + 1
+end
+
+repeat           -- Repita até i ser igual a 0
+	print(i)
+	i = i - 1
+until i == 0
+
+--[[
+Resultado:
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+]]--
+```
+
+Já o `for` pode ser usado para iterar sobre uma tabela, ou para contar de um valor até outro
+
+```
+tabela = {5, 3, 6, 2, 6}
+tabela2 = {Sol="amarelo", Lua="branca", Marte="vermelho"}
+
+-- Iterando sobre lista, i é a posição
+for i, valor in ipairs(tabela) do
+	print(i, valor)
+end
+--[[
+Res:
+1	5
+2	3
+3	6
+4	2
+5	6
+]]--
+
+-- Iterando sobre tabela associativa
+for chave, valor in pairs(tabela2) do
+	print("O(a) " .. chave .. " é " .. valor)
+end
+--[[
+Res:
+O(a) Marte é vermelho
+O(a) Sol é amarelo
+O(a) Lua é branca
+
+]]--
+
+-- Contando de 1 a 5
+for i=1, 5 do
+	print(i)
+end
+--[[
+Res:
+1
+2
+3
+4
+5
+]]--
+
+
+-- Contando de 1 a 10, em intervalos de 2
+for i=1, 10, 2 do
+	print(i)
+end
+--[[
+Res:
+1
+3
+5
+7
+9
+]]--
+
+```
+
+
+Então é esse o básico do básico de Lua, uma linguagem que achei muito legal pela sua simplicidade. Espero ter conseguido te mostrar o porquê. Até semana que vêm com mais um post aqui no Moskos' CodeField.
