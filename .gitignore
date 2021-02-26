@@ -1,7 +1,19 @@
-*.backup
-*.out
 .clangd/
 .idea/
-*.swp
-*.cpp
-*.json
+
+### Content ###
+content/posts/*.backup
+content/posts/*.out
+content/posts/*.swp
+content/posts/*.cpp
+content/posts/*.json
+
+### Hugo ###
+# Generated files by hugo
+/public/
+/resources/_gen/
+
+# Executable may be added to repository
+hugo.exe
+hugo.darwin
+hugo.linux
