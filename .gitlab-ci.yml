@@ -1,0 +1,14 @@
+image: registry.gitlab.com/pages/hugo:latest
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+
+
+deploy:
+    script:
+      - apt-get update -qq && apt-get install -y -qq lftp
+      - hugo
+      - lftp -c "set ftp:ssl-allow false; set ftp:use-feat false; open -u $FTP_USER,$FTP_PASS $FTP_HOST; mirror -Rev public/ ./"
+    only:
+        - master
+
